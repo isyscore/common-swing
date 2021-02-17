@@ -1,3 +1,9 @@
+gradle.properties
+.gradle/
+.idea/
+gradle/
+.DS_Store
+build/
 # Compiled class file
 *.class
 
