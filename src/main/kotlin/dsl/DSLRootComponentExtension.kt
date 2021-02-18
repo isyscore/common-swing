@@ -5,6 +5,8 @@ package com.isyscore.kotlin.swing.dsl
 import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
 import java.awt.Component
+import java.awt.Dimension
+import java.awt.Window
 import java.net.URL
 import java.util.*
 import javax.swing.*
@@ -89,3 +91,5 @@ fun rootSeparator(orientation: Int = JSeparator.HORIZONTAL, block: JSeparator.()
 fun rootSlider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max: Int = 100, value: Int = 0, block: JSlider.() -> Unit): JSlider = JSlider(orientation, min, max, value).apply(block)
 
 inline fun <reified T : Component> rootCustom(vararg params: Any, block: T.() -> Unit): T = newClassInstance<T>(*params).apply(block)
+
+
