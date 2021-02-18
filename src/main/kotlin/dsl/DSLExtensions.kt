@@ -47,7 +47,7 @@ fun<T> JList<T>.defaultCell(block: JLabel.(value: Any?, index: Int, selected: Bo
     cellRenderer = KDefaultCellRender(block)
 }
 
-inline fun<reified T: JComponent> JTable.cell(colIndex: Int = columnCount - 1, noinline block: T.(value: Any?, isSelected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) {
+inline fun<reified T: JComponent> JTable.cell(colIndex: Int = columnCount - 1, noinline block: T.(cell: KTableCellRE<T>, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) {
     val re = KTableCellRE(T::class.java, block)
     columnModel.getColumn(colIndex).apply {
         cellRenderer = re
@@ -55,7 +55,7 @@ inline fun<reified T: JComponent> JTable.cell(colIndex: Int = columnCount - 1, n
     }
 }
 
-fun JTable.defaultCell(colIndex: Int, block: JLabel.(value: Any?, isSelected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) {
+fun JTable.defaultCell(colIndex: Int, block: JLabel.(cell: KDefaultTableCell, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) {
     val re = KDefaultTableCell(block)
     columnModel.getColumn(colIndex).apply {
         cellRenderer = re

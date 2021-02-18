@@ -24,7 +24,7 @@ open class KCellRender<C : JComponent, T>(private val cls: Class<C>, val block: 
         }
 }
 
-open class KDefaultTableCell(val block: JLabel.(value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) : DefaultTableCellRenderer(), TableCellEditor {
+open class KDefaultTableCell(val block: JLabel.(event: KDefaultTableCell, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) : DefaultTableCellRenderer(), TableCellEditor {
 
     private var tmpValue: Any? = null
     fun setEditValue(v: Any?) {
@@ -34,13 +34,13 @@ open class KDefaultTableCell(val block: JLabel.(value: Any?, selected: Boolean, 
     override fun getTableCellEditorComponent(table: JTable, value: Any?, selected: Boolean, row: Int, col: Int): Component {
         tmpValue = value
         return super.getTableCellRendererComponent(table, value, selected, true, row, col).apply {
-            block(this as JLabel, value, selected, true, row, col)
+            block(this as JLabel, this@KDefaultTableCell, value, selected, true, row, col)
         }
     }
 
     override fun getTableCellRendererComponent(table: JTable, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int): Component =
         super.getTableCellRendererComponent(table, value, selected, cellHasFocus, row, col).apply {
-            block(this as JLabel, value, selected, cellHasFocus, row, col)
+            block(this as JLabel, this@KDefaultTableCell, value, selected, cellHasFocus, row, col)
         }
 
     override fun getCellEditorValue(): Any? = tmpValue
@@ -59,22 +59,27 @@ open class KDefaultTableCell(val block: JLabel.(value: Any?, selected: Boolean, 
 
 }
 
-class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.(value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) : TableCellRenderer, TableCellEditor {
+open class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.(event: KTableCellRE<T>, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int) -> Unit) : TableCellRenderer, TableCellEditor {
 
+    private var table: JTable? = null
     private var tmpValue: Any? = null
-    fun setEditValue(v: Any?) {
+    fun setEditValue(v: Any?, row: Int, col: Int) {
         tmpValue = v
+        table?.model?.setValueAt(tmpValue, row, col)
     }
 
-    override fun getTableCellRendererComponent(table: JTable, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int): Component =
-        cls.newInstance().apply {
-            block(this, value, selected, cellHasFocus, row, col)
+    override fun getTableCellRendererComponent(table: JTable, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int): Component {
+        this.table = table
+        return cls.newInstance().apply {
+            block(this, this@KTableCellRE, value, selected, cellHasFocus, row, col)
         }
+    }
 
     override fun getTableCellEditorComponent(table: JTable, value: Any?, selected: Boolean, row: Int, col: Int): Component {
+        this.table = table
         tmpValue = value
         return cls.newInstance().apply {
-            block(this, value, selected, true, row, col)
+            block(this, this@KTableCellRE, value, selected, true, row, col)
         }
     }
 
@@ -88,20 +93,20 @@ class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.(valu
 
     override fun cancelCellEditing() {}
 
-    override fun addCellEditorListener(l: CellEditorListener) {}
+    override fun addCellEditorListener(l: CellEditorListener) { }
 
     override fun removeCellEditorListener(l: CellEditorListener) {}
 
 }
 
-class KDefaultTreeCellRender(val block: JLabel.(value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean) -> Unit) : DefaultTreeCellRenderer() {
+open class KDefaultTreeCellRender(val block: JLabel.(value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean) -> Unit) : DefaultTreeCellRenderer() {
     override fun getTreeCellRendererComponent(tree: JTree, value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean): Component =
         super.getTreeCellRendererComponent(tree, value, selected, expanded, isLeaf, row, focused).apply {
             block(this as JLabel, value, selected, expanded, isLeaf, row, focused)
         }
 }
 
-class KTreeCellRender<T : JComponent>(private val cls: Class<T>, val block: T.(value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean) -> Unit) : TreeCellRenderer {
+open class KTreeCellRender<T : JComponent>(private val cls: Class<T>, val block: T.(value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean) -> Unit) : TreeCellRenderer {
     override fun getTreeCellRendererComponent(tree: JTree, value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean): Component =
         cls.newInstance().apply {
             block(this, value, selected, expanded, isLeaf, row, focused)

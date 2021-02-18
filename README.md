@@ -8,7 +8,7 @@
 kotlin_version=1.4.10
 
 dependencies {
-    implementation 'com.github.isyscore:common-swing:1.3.2'
+    implementation 'com.github.isyscore:common-swing:1.0.4'
 }
 ```
 

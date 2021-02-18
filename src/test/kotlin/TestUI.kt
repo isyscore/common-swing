@@ -26,31 +26,38 @@ class TestUI {
 //            textPane {  }
 //            editorPane {  }
 //            spinner {  }
-            list(array = arrayOf("a", "b")) {
-                cell<JPanel, String> { value, index, selected, cellHasFocus ->
+//            list(array = arrayOf("a", "b")) {
+//                cell<JPanel, String> { value, index, selected, cellHasFocus ->
+//                    background = Color.WHITE
+//                    if (selected) {
+//                        label(title = value) {
+//                            size { 100 x 50 }
+//                            foreground = Color.RED
+//                        }
+//                    } else {
+//                        label(title = value) {
+//                            size { 100 x 50 }
+//                            foreground = Color.BLACK
+//                        }
+//                    }
+//                }
+//            }
+            val tbl = table(arrayRowData = arrayOf(arrayOf("A", true), arrayOf("B", false)), arrayColumnNames = arrayOf("Name", "Checked")) {
+                // rowHeight = 50
+                cell<JCheckBox> { cell, value, selected, cellHasFocus, row, col ->
                     background = Color.WHITE
-                    if (selected) {
-                        label(title = value) {
-                            size { 100 x 50 }
-                            foreground = Color.RED
-                        }
-                    } else {
-                        label(title = value) {
-                            size { 100 x 50 }
-                            foreground = Color.BLACK
-                        }
-                    }
+                    this.isSelected = value as Boolean
+                    addActionListener { cell.setEditValue(this.isSelected, row, col) }
                 }
             }
-            table(arrayRowData = arrayOf(arrayOf("A", true), arrayOf("B", false)), arrayColumnNames = arrayOf("Name", "Checked")) {
-                // rowHeight = 50
-                cell<JButton> { value, isSelected, cellHasFocus, row, col ->
-                    this.text = "$value"
+            borderPanel {
+                button("Check") {
                     addActionListener {
-                        println(value)
+                        val d1 = tbl.model.getValueAt(0, 1)
+                        val d2 = tbl.model.getValueAt(1, 1)
+                        println("d1 = $d1, d2 = $d2")
                     }
                 }
-
             }
 //            clearPanel {
 //                size { 500 x 200 }
@@ -59,7 +66,7 @@ class TestUI {
 //                }
 //            }
         }
-        frame.size { 500 x 800 }
+        frame.size { 500 x 300 }
         // frame.setSize(500, 500)
         frame.setLocationRelativeTo(null)
         frame.isVisible = true
