@@ -19,7 +19,7 @@ class EditPopupMenu(comp: JTextComponent): JPopupMenu() {
     }
 }
 
-class EditKeyListener(val comp: JTextComponent): KeyListener {
+class EditKeyListener(private val comp: JTextComponent): KeyListener {
     override fun keyTyped(e: KeyEvent) {}
     override fun keyPressed(e: KeyEvent) {}
     override fun keyReleased(e: KeyEvent) {
@@ -36,7 +36,7 @@ class EditKeyListener(val comp: JTextComponent): KeyListener {
 
 }
 
-class EditMouseListener(val comp: JTextComponent, val popup: JPopupMenu): MouseListener {
+class EditMouseListener(private val comp: JTextComponent, private val popup: JPopupMenu): MouseListener {
     override fun mouseClicked(e: MouseEvent) {}
     override fun mousePressed(e: MouseEvent) {}
     override fun mouseReleased(e: MouseEvent) {

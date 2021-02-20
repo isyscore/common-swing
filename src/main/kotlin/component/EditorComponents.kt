@@ -4,7 +4,6 @@ import java.net.URL
 import javax.swing.*
 
 class KTextField(title: String? = null, column: Int = 0) : JTextField(title, column) {
-
     init {
         val popup = EditPopupMenu(this)
         addKeyListener(EditKeyListener(this))

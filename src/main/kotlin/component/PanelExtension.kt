@@ -5,25 +5,25 @@ import java.awt.Color
 import java.awt.FlowLayout
 import javax.swing.JPanel
 
-class ClearPanel: JPanel(null) {
+open class ClearPanel: JPanel(null) {
     init {
         background = Color.WHITE
     }
 }
 
-class BorderPanel: JPanel(BorderLayout()) {
+open class BorderPanel: JPanel(BorderLayout()) {
     init {
         background = Color.WHITE
     }
 }
 
-class VertPanel: JPanel(VertFlowLayout()) {
+open class VertPanel: JPanel(VertFlowLayout()) {
     init {
         background = Color.WHITE
     }
 }
 
-class HorzPanel: JPanel(FlowLayout()) {
+open class HorzPanel: JPanel(FlowLayout()) {
     init {
         background = Color.WHITE
     }
