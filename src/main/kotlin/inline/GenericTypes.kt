@@ -14,5 +14,6 @@ inline fun<reified T> newClassInstance(vararg params: Any): T {
             else -> it::class.java
         }
     }.toTypedArray()
+    pparam.forEach { println(it) }
     return T::class.java.getDeclaredConstructor(*pparam).apply { isAccessible = true }.newInstance(*params)
 }

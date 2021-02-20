@@ -1,7 +1,11 @@
 import com.isyscore.kotlin.swing.inline.newClassInstance
+import com.isyscore.kotlin.swing.runOnMainThread
 import org.junit.Test
+import java.awt.Color
 import java.awt.Component
+import javax.swing.DefaultComboBoxModel
 import javax.swing.JButton
+import javax.swing.JComboBox
 
 // test for generic type
 
@@ -11,9 +15,18 @@ class TestGT {
         return newClassInstance<T>(*params).apply(block)
     }
 
+    class MyCombo(data: List<String>): JComboBox<String>() {
+        init {
+            background = Color.WHITE
+            model = DefaultComboBoxModel(data.toTypedArray())
+            runOnMainThread { updateUI() }
+        }
+    }
+
     @Test
     fun test() {
-        val btn = custom<JButton>("2333") {
+        val list: List<String> = listOf("a", "b")
+        val btn = custom<MyCombo>(list) {
 
         }
         println(btn)
