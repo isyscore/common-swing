@@ -23,7 +23,8 @@ fun JTabbedPane.addTabWithClose(title: String? = null, icon: Icon? = null, comp:
             button(title = "x", position = BorderLayout.CENTER) {
                 isFocusPainted = false
                 margin = Insets(0, 0, 0, 0)
-                preferredSize = Dimension(16, 16)
+                size { 16 x 16 }
+                putClientProperty("JButton.buttonType", "square")
                 addActionListener {
                     this@addTabWithClose.remove(this@addTabWithClose.indexOfComponent(comp))
                 }
