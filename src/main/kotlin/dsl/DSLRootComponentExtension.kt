@@ -92,4 +92,6 @@ fun rootSlider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max: Int = 1
 
 inline fun <reified T : Component> rootCustom(vararg params: Any, block: T.() -> Unit): T = newClassInstance<T>(*params).apply(block)
 
+fun<T: Component> rootComp(comp: T, block: T.() -> Unit): T = comp.apply(block)
+
 

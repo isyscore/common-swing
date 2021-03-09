@@ -6,7 +6,7 @@ import javax.swing.border.Border
 import javax.swing.plaf.ComponentUI
 
 infix fun Int.x(y: Int): Dimension = Dimension(this, y)
-infix fun Dimension.and(b: Dimension): Rectangle = Rectangle(this.width, this.height, b.width, b.height)
+infix fun Dimension.x(b: Dimension): Rectangle = Rectangle(this.width, this.height, b.width, b.height)
 
 fun JComponent.bounds(block: () -> Rectangle) {
     val t = block()

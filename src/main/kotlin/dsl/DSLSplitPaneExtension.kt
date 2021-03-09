@@ -567,3 +567,19 @@ inline fun<reified T: Component> JSplitPane.leftCustom(vararg params: Any, block
 inline fun<reified T: Component> JSplitPane.rightCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.RIGHT, *params) { block(this) }
 inline fun<reified T: Component> JSplitPane.topCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.TOP, *params) { block(this) }
 inline fun<reified T: Component> JSplitPane.bottomCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.BOTTOM, *params) { block(this) }
+
+fun<T: Component> JSplitPane.comp(position: String = JSplitPane.LEFT, comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    when(position) {
+        JSplitPane.LEFT -> leftComponent = comp
+        JSplitPane.RIGHT -> rightComponent = comp
+        JSplitPane.TOP -> topComponent = comp
+        JSplitPane.BOTTOM -> bottomComponent = comp
+    }
+    return comp
+}
+
+fun <T: Component> JSplitPane.leftComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.LEFT, comp, block)
+fun <T: Component> JSplitPane.rightComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.RIGHT, comp, block)
+fun <T: Component> JSplitPane.topComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.TOP, comp, block)
+fun <T: Component> JSplitPane.bottomComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.BOTTOM, comp, block)

@@ -104,3 +104,9 @@ inline fun<reified T: Component> JTabbedPane.customTab(title: String? = null, ic
     if (canClose) addTabWithClose(title, icon, lay) else addTab(title, icon, lay)
     return lay
 }
+
+fun<T: Component> JTabbedPane.compTab(title: String?, icon: Icon? = null, canClose: Boolean = false, comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    if (canClose) addTabWithClose(title, icon, comp) else addTab(title, icon, comp)
+    return comp
+}

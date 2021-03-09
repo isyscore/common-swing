@@ -233,3 +233,9 @@ inline fun<reified T: Component> JLayeredPane.custom(layer: Int = 0, position: I
     add(comp, Integer(layer), position)
     return comp
 }
+
+fun<T: Component> JLayeredPane.comp(layer: Int = 0, position: Int = 0, comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    add(comp, Integer(layer), position)
+    return comp
+}

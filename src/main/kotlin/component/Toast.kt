@@ -1,4 +1,4 @@
-package component
+package com.isyscore.kotlin.swing.component
 
 import java.awt.*
 import java.awt.font.FontRenderContext

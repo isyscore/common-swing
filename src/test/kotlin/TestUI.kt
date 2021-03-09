@@ -1,15 +1,8 @@
 import com.bulenkov.darcula.DarculaLaf
+import com.isyscore.kotlin.swing.component.toast
 import com.isyscore.kotlin.swing.dsl.*
 import org.junit.Test
-import java.awt.Color
-import java.awt.Component
-import java.util.*
 import javax.swing.*
-import javax.swing.event.CellEditorListener
-import javax.swing.plaf.metal.DefaultMetalTheme
-import javax.swing.plaf.metal.MetalLookAndFeel
-import javax.swing.table.TableCellEditor
-import javax.swing.table.TableCellRenderer
 
 class TestUI {
 
@@ -27,6 +20,10 @@ class TestUI {
             button("Sample1") {
                 bounds { (20 x 60) and (60 x 30) }
                 this.putClientProperty("JButton.buttonType", "square")
+
+                addActionListener {
+                    frame.toast("2333")
+                }
             }
 
             pager {
@@ -59,8 +56,8 @@ class TestUI {
 
         UIManager.setLookAndFeel(DarculaLaf())
         // UIManager.setLookAndFeel(MetalLookAndFeel())
-        // JFrame.setDefaultLookAndFeelDecorated(true)
-        // JDialog.setDefaultLookAndFeelDecorated(true)
+         JFrame.setDefaultLookAndFeelDecorated(true)
+         JDialog.setDefaultLookAndFeelDecorated(true)
         val frame = JFrame("Test")
         frame.isUndecorated = true
 
@@ -68,9 +65,6 @@ class TestUI {
         f.setUndecorated(true);
     f.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
          */
-
-
-
 
         frame.contentPane = rootVertPanel {
 //            input {  }
@@ -98,7 +92,6 @@ class TestUI {
             val tbl = table(arrayRowData = arrayOf(arrayOf("A", true), arrayOf("B", false)), arrayColumnNames = arrayOf("Name", "Checked")) {
                 // rowHeight = 50
                 cell<JCheckBox> { cell, value, selected, cellHasFocus, row, col ->
-                    background = Color.WHITE
                     this.isSelected = value as Boolean
                     addActionListener { cell.setEditValue(this.isSelected, row, col) }
                 }

@@ -233,3 +233,10 @@ inline fun<reified T: Component> JScrollPane.custom(vararg params: Any, block: T
     setViewportView(comp)
     return comp
 }
+
+fun <T: Component> JScrollPane.comp(comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    setViewportView(comp)
+    return comp
+}
+

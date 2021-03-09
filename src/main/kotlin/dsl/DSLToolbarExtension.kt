@@ -233,3 +233,9 @@ inline fun<reified T: Component> JToolBar.custom(vararg params: Any, block: T.()
     add(comp)
     return comp
 }
+
+fun <T: Component> JToolBar.comp(comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    add(comp)
+    return comp
+}

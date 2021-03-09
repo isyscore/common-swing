@@ -258,6 +258,12 @@ inline fun<reified T: Component> JMenu.custom(vararg params: Any, block: T.() ->
     return comp
 }
 
+fun<T: Component> JMenu.comp(comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    add(comp)
+    return comp
+}
+
 fun JPopupMenu.menu(title: String? = null, block: JMenu.() -> Unit): JMenu {
     val m = JMenu(title).apply(block)
     add(m)
@@ -485,3 +491,10 @@ inline fun<reified T: Component> JPopupMenu.custom(vararg params: Any, block: T.
     add(comp)
     return comp
 }
+
+fun<T: Component> JPopupMenu.comp(comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    add(comp)
+    return comp
+}
+

@@ -245,3 +245,9 @@ inline fun<reified T: Component> JPanel.custom(position: String? = null, vararg 
     if (position != null) add(comp, position) else add(comp)
     return comp
 }
+
+fun<T: Component> JPanel.comp(position: String? = null, comp: T, block: T.() -> Unit): T {
+    comp.apply(block)
+    if (position != null) add(comp, position) else add(comp)
+    return comp
+}
