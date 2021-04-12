@@ -1,40 +1,82 @@
 import com.bulenkov.darcula.DarculaLaf
-import com.isyscore.kotlin.swing.component.toast
+import com.isyscore.kotlin.common.join
 import com.isyscore.kotlin.swing.dsl.*
+import com.isyscore.kotlin.swing.runOnMainThread
 import org.junit.Test
+import java.awt.BorderLayout.NORTH
+import java.util.*
 import javax.swing.*
+import javax.swing.table.DefaultTableModel
 
 class TestUI {
 
     @Test
     fun testTabClose() {
+
         // return c instanceof JButton && "square".equals(((JButton)c).getClientProperty("JButton.buttonType"));
         UIManager.setLookAndFeel(DarculaLaf())
         JFrame.setDefaultLookAndFeelDecorated(true)
         JDialog.setDefaultLookAndFeelDecorated(true)
         val frame = JFrame("Test")
-        frame.contentPane = rootClearPanel {
-            button("Sample1") {
-                bounds { (20 x 20) and (60 x 30) }
-            }
-            button("Sample1") {
-                bounds { (20 x 60) and (60 x 30) }
-                this.putClientProperty("JButton.buttonType", "square")
-
-                addActionListener {
-                    frame.toast("2333")
+        var t: JTable? = null
+        val vecData = Vector<Vector<Any>>()
+        val tm = DefaultTableModel(vecData, Vector(listOf("", "Table", "Edit", "Button")))
+        frame.contentPane = rootBorderPanel {
+            scroller {
+                t = table(model = tm) {
+                    readonlyCell(1)
+                    boolCell(0)
+                    buttonCell(3) { value, row, col ->
+                        println("Clicked => $value, $row, $col")
+                    }
+                    val cb = rootCombobox(array = arrayOf("a", "b", "c")) { }
+                    comboCell(2, cb)
+                    column(0) {
+                        preferredWidth = 20
+                    }
+                    header {
+                        reorderingAllowed = false
+                        resizingAllowed = false
+                    }
+                    autoResizeMode = JTable.AUTO_RESIZE_OFF
                 }
             }
 
-            pager {
-                bounds { (20 x 100) and (200 x 200) }
-                borderPanelTab("2333", canClose = true) {
-
+            horzPanel(position = NORTH) {
+                button(title = "FILL DATA") {
+                    addActionListener {
+                        vecData.clear()
+                        vecData.add(Vector(listOf(false, "Table1", "", "Click")))
+                        vecData.add(Vector(listOf(false, "Table2", "", "Click2")))
+                        runOnMainThread {
+                            t?.validate()
+                            t?.updateUI()
+                        }
+                    }
                 }
-                borderPanelTab("6666", canClose = true) {
-
+                button(title = "CLEAN") {
+                    // vecData.clear()
+                    addActionListener {
+                        (0 until (t?.model?.rowCount ?: 0)).forEach {
+                            t?.model?.setValueAt(false, it, 0)
+                        }
+                        vecData.clear()
+                        // vecData.add(Vector(listOf(false, "Table3")))
+                        runOnMainThread {
+                            t?.validate()
+                            t?.updateUI()
+                        }
+                    }
+                }
+                button(title = "GO GO GO") {
+                    addActionListener {
+                        val d1 = t?.model?.getValueAt(0, 1) join t?.model?.getValueAt(0, 0) join t?.model?.getValueAt(0, 2)
+                        val d2 = t?.model?.getValueAt(1, 1) join t?.model?.getValueAt(1, 0) join t?.model?.getValueAt(1, 2)
+                        println("d1 = $d1, d2 = $d2")
+                    }
                 }
             }
+
         }
         frame.size { 500 x 500 }
         // frame.setSize(500, 500)

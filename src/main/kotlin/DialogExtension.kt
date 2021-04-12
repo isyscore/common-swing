@@ -18,7 +18,6 @@ fun Component.showFileDialog(filters: Array<FileFilter>, isSave: Boolean = false
     }
 }
 
-
 fun Component.showDirectoryDialog(defaultDir: String? = null, callback: (File) -> Unit) = JFileChooser().apply {
     currentDirectory = if (defaultDir == null) FileSystemView.getFileSystemView().homeDirectory else File(defaultDir)
     fileSelectionMode = JFileChooser.DIRECTORIES_ONLY

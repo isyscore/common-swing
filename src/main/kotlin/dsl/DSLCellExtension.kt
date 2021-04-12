@@ -70,6 +70,7 @@ open class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.
 
     override fun getTableCellRendererComponent(table: JTable, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int): Component {
         this.table = table
+        println("getTableCellRendererComponent => $value")
         return cls.newInstance().apply {
             block(this, this@KTableCellRE, value, selected, cellHasFocus, row, col)
         }
@@ -77,13 +78,17 @@ open class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.
 
     override fun getTableCellEditorComponent(table: JTable, value: Any?, selected: Boolean, row: Int, col: Int): Component {
         this.table = table
+        println("getTableCellEditorComponent => $value")
         tmpValue = value
         return cls.newInstance().apply {
             block(this, this@KTableCellRE, value, selected, true, row, col)
         }
     }
 
-    override fun getCellEditorValue(): Any? = tmpValue
+    override fun getCellEditorValue(): Any? {
+        println("getCellEditorValue => $tmpValue")
+        return tmpValue
+    }
 
     override fun isCellEditable(eo: EventObject): Boolean = true
 
