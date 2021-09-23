@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.KDefaultBooleanRender
@@ -6,7 +8,6 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.border.Border
 import javax.swing.plaf.ComponentUI
-import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumn
 
@@ -90,7 +91,7 @@ fun JTable.buttonCell(colIndex: Int, clickEvent: (value: Any?, row: Int, col: In
 
 fun JTable.readonlyCell(colIndex: Int) {
     val re = KDefaultReadonlyTableCell()
-    columnModel.getColumn(1).apply {
+    columnModel.getColumn(colIndex).apply {
         cellRenderer = re
         cellEditor = re
     }

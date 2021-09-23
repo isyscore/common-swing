@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.isyscore.kotlin.swing
 
 import javax.swing.SwingUtilities

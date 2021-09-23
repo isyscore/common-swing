@@ -3,14 +3,13 @@ package com.isyscore.kotlin.swing.component
 import java.awt.Component
 import java.util.*
 import javax.swing.JCheckBox
-import javax.swing.JLabel
 import javax.swing.JTable
 import javax.swing.event.CellEditorListener
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-open class KDefaultReadonlyTableCell() : DefaultTableCellRenderer(), TableCellEditor {
+open class KDefaultReadonlyTableCell : DefaultTableCellRenderer(), TableCellEditor {
 
     private var tmpValue: Any? = null
 

@@ -1,4 +1,4 @@
-@file:Suppress("DuplicatedCode", "unused")
+@file:Suppress("DuplicatedCode", "unused", "MemberVisibilityCanBePrivate")
 
 package com.isyscore.kotlin.swing.component
 

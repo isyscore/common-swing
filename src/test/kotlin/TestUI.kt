@@ -1,4 +1,4 @@
-import com.bulenkov.darcula.DarculaLaf
+// import com.bulenkov.darcula.DarculaLaf
 import com.isyscore.kotlin.common.join
 import com.isyscore.kotlin.swing.dsl.*
 import com.isyscore.kotlin.swing.runOnMainThread
@@ -14,7 +14,7 @@ class TestUI {
     fun testTabClose() {
 
         // return c instanceof JButton && "square".equals(((JButton)c).getClientProperty("JButton.buttonType"));
-        UIManager.setLookAndFeel(DarculaLaf())
+        // UIManager.setLookAndFeel(DarculaLaf())
         JFrame.setDefaultLookAndFeelDecorated(true)
         JDialog.setDefaultLookAndFeelDecorated(true)
         val frame = JFrame("Test")
@@ -57,11 +57,7 @@ class TestUI {
                 button(title = "CLEAN") {
                     // vecData.clear()
                     addActionListener {
-                        (0 until (t?.model?.rowCount ?: 0)).forEach {
-                            t?.model?.setValueAt(false, it, 0)
-                        }
                         vecData.clear()
-                        // vecData.add(Vector(listOf(false, "Table3")))
                         runOnMainThread {
                             t?.validate()
                             t?.updateUI()
@@ -96,7 +92,7 @@ class TestUI {
     @Test
     fun test() {
 
-        UIManager.setLookAndFeel(DarculaLaf())
+        // UIManager.setLookAndFeel(DarculaLaf())
         // UIManager.setLookAndFeel(MetalLookAndFeel())
          JFrame.setDefaultLookAndFeelDecorated(true)
          JDialog.setDefaultLookAndFeelDecorated(true)

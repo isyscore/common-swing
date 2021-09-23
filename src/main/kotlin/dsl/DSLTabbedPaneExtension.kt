@@ -2,10 +2,12 @@
 
 package com.isyscore.kotlin.swing.dsl
 
-import com.isyscore.kotlin.swing.component.*
+import com.isyscore.kotlin.swing.component.BorderPanel
+import com.isyscore.kotlin.swing.component.ClearPanel
+import com.isyscore.kotlin.swing.component.HorzPanel
+import com.isyscore.kotlin.swing.component.VertPanel
 import com.isyscore.kotlin.swing.inline.newClassInstance
 import java.awt.*
-import java.util.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 

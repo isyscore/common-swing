@@ -5,8 +5,6 @@ package com.isyscore.kotlin.swing.dsl
 import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
 import java.awt.Component
-import java.awt.Dimension
-import java.awt.Window
 import java.net.URL
 import java.util.*
 import javax.swing.*
