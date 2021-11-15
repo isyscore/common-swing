@@ -15,7 +15,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group 'com.github.isyscore'
-version '1.7.0'
+version '1.8.1'
 
 repositories {
     mavenCentral()
@@ -23,10 +23,10 @@ repositories {
 }
 
 dependencies {
-    api "com.github.isyscore:common-jvm:1.7.0"
+    api "com.github.isyscore:common-jvm:1.8.1"
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt'
     api "com.github.isyscore:darcula-theme:1.0.0"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testImplementation "junit:junit:4.13.2"
 }
 
 compileKotlin {
@@ -70,8 +70,8 @@ uploadArchives {
             pom.project {
                 name "common-swing"
                 packaging 'jar'
-                description 'iSysCore Common Kotlin Library'
-                url 'https://github.com/isyscore/common-jvm'
+                description 'iSysCore Common Swing Library'
+                url 'https://github.com/isyscore/common-swing'
                 scm {
                     connection 'https://github.com/isyscore/common-swing'
                     developerConnection 'https://github.com/isyscore/common-swing'
