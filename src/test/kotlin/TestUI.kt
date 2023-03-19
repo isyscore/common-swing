@@ -1,83 +1,141 @@
 // import com.bulenkov.darcula.DarculaLaf
 import com.isyscore.kotlin.common.join
+import com.isyscore.kotlin.swing.UI
+import com.isyscore.kotlin.swing.UIStyle
 import com.isyscore.kotlin.swing.dsl.*
 import com.isyscore.kotlin.swing.runOnMainThread
 import org.junit.Test
+import java.awt.BorderLayout
 import java.awt.BorderLayout.NORTH
 import java.util.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.Theme
+import java.awt.Color
+import javax.swing.border.Border
+import kotlin.concurrent.thread
 
 class TestUI {
 
     @Test
     fun testTabClose() {
-
-        // return c instanceof JButton && "square".equals(((JButton)c).getClientProperty("JButton.buttonType"));
-        // UIManager.setLookAndFeel(DarculaLaf())
-        JFrame.setDefaultLookAndFeelDecorated(true)
-        JDialog.setDefaultLookAndFeelDecorated(true)
-        val frame = JFrame("Test")
-        var t: JTable? = null
+        UI.lookAndFeel(UIStyle.Light)
         val vecData = Vector<Vector<Any>>()
-        val tm = DefaultTableModel(vecData, Vector(listOf("", "Table", "Edit", "Button")))
-        frame.contentPane = rootBorderPanel {
-            scroller {
-                t = table(model = tm) {
-                    readonlyCell(1)
-                    boolCell(0)
-                    buttonCell(3) { value, row, col ->
-                        println("Clicked => $value, $row, $col")
+        lateinit var t: JTable
+        val frame = rootFrame("Table") {
+            contentBorderPanel {
+                scroller {
+                    t = table(model = DefaultTableModel(vecData, Vector(listOf("", "Table", "Edit", "Button")))) {
+                        readonlyCell(1)
+                        boolCell(0)
+                        buttonCell(3) { value, row, col ->
+                            println("Clicked => $value, $row, $col")
+                        }
+                        val cb = rootCombobox(array = arrayOf("a", "b", "c")) { }
+                        comboCell(2, cb)
+                        column(0) {
+                            preferredWidth = 20
+                        }
+                        header {
+                            reorderingAllowed = false
+                            resizingAllowed = false
+                        }
+                        autoResizeMode = JTable.AUTO_RESIZE_OFF
                     }
-                    val cb = rootCombobox(array = arrayOf("a", "b", "c")) { }
-                    comboCell(2, cb)
-                    column(0) {
-                        preferredWidth = 20
-                    }
-                    header {
-                        reorderingAllowed = false
-                        resizingAllowed = false
-                    }
-                    autoResizeMode = JTable.AUTO_RESIZE_OFF
                 }
-            }
-
-            horzPanel(position = NORTH) {
-                button(title = "FILL DATA") {
-                    addActionListener {
-                        vecData.clear()
-                        vecData.add(Vector(listOf(false, "Table1", "", "Click")))
-                        vecData.add(Vector(listOf(false, "Table2", "", "Click2")))
-                        runOnMainThread {
-                            t?.validate()
-                            t?.updateUI()
+                horzPanel(position = NORTH) {
+                    button(title = "FILL DATA") {
+                        addActionListener {
+                            vecData.clear()
+                            vecData.add(Vector(listOf(false, "Table1", "", "Click")))
+                            vecData.add(Vector(listOf(false, "Table2", "", "Click2")))
+                            runOnMainThread {
+                                t.validate()
+                                t.updateUI()
+                            }
+                        }
+                    }
+                    button(title = "CLEAN") {
+                        addActionListener {
+                            vecData.clear()
+                            runOnMainThread {
+                                t.validate()
+                                t.updateUI()
+                            }
+                        }
+                    }
+                    button(title = "Show") {
+                        addActionListener {
+                            val d1 = t.model.getValueAt(0, 1) join t.model.getValueAt(0, 0) join t.model.getValueAt(0, 2)
+                            val d2 = t.model.getValueAt(1, 1) join t.model.getValueAt(1, 0) join t.model.getValueAt(1, 2)
+                            println("d1 = $d1, d2 = $d2")
                         }
                     }
                 }
-                button(title = "CLEAN") {
-                    // vecData.clear()
-                    addActionListener {
-                        vecData.clear()
-                        runOnMainThread {
-                            t?.validate()
-                            t?.updateUI()
-                        }
-                    }
-                }
-                button(title = "GO GO GO") {
-                    addActionListener {
-                        val d1 = t?.model?.getValueAt(0, 1) join t?.model?.getValueAt(0, 0) join t?.model?.getValueAt(0, 2)
-                        val d2 = t?.model?.getValueAt(1, 1) join t?.model?.getValueAt(1, 0) join t?.model?.getValueAt(1, 2)
-                        println("d1 = $d1, d2 = $d2")
-                    }
-                }
             }
-
+            size = 1024 x 768
+            isVisible = true
         }
-        frame.size { 500 x 500 }
-        // frame.setSize(500, 500)
-        frame.setLocationRelativeTo(null)
-        frame.isVisible = true
+
+//        frame.contentPane = rootBorderPanel {
+//
+//            scroller {
+//                t = table(model = tm) {
+//                    readonlyCell(1)
+//                    boolCell(0)
+//                    buttonCell(3) { value, row, col ->
+//                        println("Clicked => $value, $row, $col")
+//                    }
+//                    val cb = rootCombobox(array = arrayOf("a", "b", "c")) { }
+//                    comboCell(2, cb)
+//                    column(0) {
+//                        preferredWidth = 20
+//                    }
+//                    header {
+//                        reorderingAllowed = false
+//                        resizingAllowed = false
+//                    }
+//                    autoResizeMode = JTable.AUTO_RESIZE_OFF
+//                }
+//            }
+//
+//            horzPanel(position = NORTH) {
+//                button(title = "FILL DATA") {
+//                    addActionListener {
+//                        vecData.clear()
+//                        vecData.add(Vector(listOf(false, "Table1", "", "Click")))
+//                        vecData.add(Vector(listOf(false, "Table2", "", "Click2")))
+//                        runOnMainThread {
+//                            t?.validate()
+//                            t?.updateUI()
+//                        }
+//                    }
+//                }
+//                button(title = "CLEAN") {
+//                    // vecData.clear()
+//                    addActionListener {
+//                        vecData.clear()
+//                        runOnMainThread {
+//                            t?.validate()
+//                            t?.updateUI()
+//                        }
+//                    }
+//                }
+//                button(title = "GO GO GO") {
+//                    addActionListener {
+//                        val d1 = t?.model?.getValueAt(0, 1) join t?.model?.getValueAt(0, 0) join t?.model?.getValueAt(0, 2)
+//                        val d2 = t?.model?.getValueAt(1, 1) join t?.model?.getValueAt(1, 0) join t?.model?.getValueAt(1, 2)
+//                        println("d1 = $d1, d2 = $d2")
+//                    }
+//                }
+//            }
+//
+//        }
+//        frame.size { 500 x 500 }
+//        // frame.setSize(500, 500)
+//        frame.setLocationRelativeTo(null)
+//        frame.isVisible = true
 
         while (frame.isVisible) {
             try {
@@ -96,8 +154,9 @@ class TestUI {
         // UIManager.setLookAndFeel(MetalLookAndFeel())
          JFrame.setDefaultLookAndFeelDecorated(true)
          JDialog.setDefaultLookAndFeelDecorated(true)
+
         val frame = JFrame("Test")
-        frame.isUndecorated = true
+        // frame.isUndecorated = true
 
         /*
         f.setUndecorated(true);
@@ -158,6 +217,182 @@ class TestUI {
         frame.setLocationRelativeTo(null)
         frame.isVisible = true
 
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    @Test
+    fun test1() {
+        val frame = rootFrame("Sample") {
+            contentBorderPanel {
+                button("It's a button", position = BorderLayout.SOUTH) {
+
+                }
+                scroller {
+                    textArea {
+
+                    }
+                }
+            }
+            size = 1024 x 768
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    @Test
+    fun testTab() {
+        UI.lookAndFeel(UIStyle.Light)
+        val frame = rootFrame("Tab Sample") {
+            contentBorderPanel {
+                pager(tabPlacement = JTabbedPane.TOP) {
+                    borderPanelTab("Welcome", canClose = false) {
+
+                    }
+                    borderPanelTab("Tab 1", canClose = true) {
+
+                    }
+                    borderPanelTab("Tab 2", canClose = true) {
+
+                    }
+                }
+            }
+            size = 1024 x 768
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    @Test
+    fun testSyntax() {
+
+        val frame = rootFrame("Syntax") {
+            contentBorderPanel {
+                scroller {
+                    custom<RSyntaxTextArea>(CODE) {
+                        syntaxEditingStyle = "text/java"
+                        Theme.load(javaClass.getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml")).apply(this)
+                    }
+                }
+            }
+            size = 1024 x 768
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    private val CODE =
+"""public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}"""
+
+    @Test
+    fun testThis() {
+        UI.lookAndFeel(UIStyle.Aero)
+        val frame = rootFrame("This!!") {
+            contentBorderPanel {
+                borderPanel {
+                    borderPanel {
+                        button("Red") {
+                            addActionListener {
+                                this@borderPanel.background = Color.red
+                            }
+                        }
+                    }
+                }
+            }
+            size = 1024 x 768
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    @Test
+    fun testThread() {
+        val frame = rootFrame("Thread") {
+            contentBorderPanel {
+                button("0") {
+                    thread {
+                        Thread.sleep(10000)
+                        runOnMainThread {
+                            this.text = "done"
+                        }
+                    }
+                }
+            }
+            size = 1024 x 768
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    @Test
+    fun testTheme() {
+        UI.lookAndFeel(UIStyle.Windows)
+        val frame = rootFrame("Theme") {
+            contentBorderPanel {
+                border = BorderFactory.createEmptyBorder(4,4,4,4)
+                split {
+                    leftScroller {
+                        list(array = arrayOf("Light", "Dark", "Darcula", "Intellij", "Metal", "Motif", "Windows", "WindowsClassic", "GTK")) {
+                            border = BorderFactory.createEmptyBorder(4,4,4,4)
+                        }
+                    }
+                    rightBorderPanel {
+                        split {
+                            leftScroller {
+                                minimumSize = 120 x 80
+                                tree {  }
+                            }
+                            rightScroller {
+                                textArea("Hello World") {
+
+                                }
+                            }
+                            dividerLocation = 140
+                            dividerSize = 3
+                        }
+                    }
+                    dividerLocation = 140
+                    dividerSize = 3
+                }
+
+            }
+            size = 600 x 400
+            setLocationRelativeTo(null)
+            isVisible = true
+        }
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)

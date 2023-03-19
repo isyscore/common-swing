@@ -197,7 +197,7 @@ fun <T> JMenu.list(model: ListModel<T>? = null, array: Array<T>? = null, vector:
 fun JMenu.table(
     model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
     rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<*>? = null, vecColumnNames: Vector<*>? = null,
+    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
     arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable {
@@ -250,6 +250,12 @@ fun JMenu.slider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max: Int =
     val sl = JSlider(orientation, min, max, value).apply(block)
     add(sl)
     return sl
+}
+
+fun JMenu.box(axis: Int = 0, block: Box.() -> Unit): Box {
+    val box = Box(axis).apply(block)
+    add(box)
+    return box
 }
 
 inline fun<reified T: Component> JMenu.custom(vararg params: Any, block: T.() -> Unit): T {
@@ -431,7 +437,7 @@ fun <T> JPopupMenu.list(model: ListModel<T>? = null, array: Array<T>? = null, ve
 fun JPopupMenu.table(
     model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
     rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<*>? = null, vecColumnNames: Vector<*>? = null,
+    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
     arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable {

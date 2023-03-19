@@ -20,7 +20,7 @@ fun rootLayer(block: JLayeredPane.() -> Unit): JLayeredPane = JLayeredPane().app
 
 fun JLayeredPane.panel(layout: LayoutManager? = BorderLayout(), layer: Int = 0, position: Int = 0, block: JPanel.() -> Unit): JPanel {
     val pnl = JPanel(layout).apply(block)
-    add(pnl, Integer(layer), position)
+    add(pnl, layer, position)
     return pnl
 }
 
@@ -173,7 +173,7 @@ fun <T> JLayeredPane.list(model: ListModel<T>? = null, array: Array<T>? = null, 
 fun JLayeredPane.table(
     model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
     rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<*>? = null, vecColumnNames: Vector<*>? = null,
+    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
     arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
     layer: Int = 0, position: Int = 0, block: JTable.() -> Unit
 ): JTable {
@@ -226,6 +226,12 @@ fun JLayeredPane.slider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max
     val sl = JSlider(orientation, min, max, value).apply(block)
     add(sl, Integer(layer), position)
     return sl
+}
+
+fun JLayeredPane.box(axis: Int = 0, layer: Int = 0, position: Int = 0, block: Box.() -> Unit): Box {
+    val box = Box(axis).apply(block)
+    add(box, layer, position)
+    return box
 }
 
 inline fun<reified T: Component> JLayeredPane.custom(layer: Int = 0, position: Int = 0, vararg params: Any, block: T.() -> Unit): T {

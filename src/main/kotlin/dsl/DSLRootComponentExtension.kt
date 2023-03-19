@@ -56,7 +56,7 @@ fun <T> rootList(model: ListModel<T>? = null, array: Array<T>? = null, vector: V
 fun rootTable(
     model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
     rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<*>? = null, vecColumnNames: Vector<*>? = null,
+    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
     arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable = when {

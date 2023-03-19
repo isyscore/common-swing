@@ -11,23 +11,27 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: "org.jetbrains.kotlin.jvm"
-apply plugin: 'maven'
+apply plugin: "maven-publish"
 apply plugin: 'signing'
 
 group 'com.github.isyscore'
-version '1.8.1'
+version '2.0.0.2'
 
 repositories {
     mavenCentral()
-    maven { url 'https://kotlin.bintray.com/kotlinx' }
 }
 
 dependencies {
-    api "com.github.isyscore:common-jvm:1.8.1"
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2-native-mt'
-    api "com.github.isyscore:darcula-theme:1.0.0"
+    api "com.github.isyscore:common-jvm:2.0.1"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    api 'me.friwi:jcefmaven:110.0.25'
+    api 'com.formdev:flatlaf:3.0'
+    api 'com.jtattoo:JTattoo:1.6.13'
+    testImplementation 'com.fifesoft:rsyntaxtextarea:3.3.2'
     testImplementation "junit:junit:4.13.2"
 }
+
+sourceCompatibility = 1.8
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
@@ -37,62 +41,77 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-task javadocJar(type: Jar) {
-    from javadoc
-    classifier "javadoc"
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allJava
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier "sources"
+task javadocJar(type: Jar) {
+    classifier = "javadoc"
+    from javadoc.destinationDir
 }
 
 artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    sign configurations.archives
-}
+publishing {
+    publications {
+        mavenKotlin(MavenPublication) {
+            groupId = "com.github.isyscore"
+            artifactId = "common-swing"
+            version = "2.0.0.2"
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment ->
-                signing.signPom(deployment)
-            }
-            repository(url: ossrhNexusUrl) {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            snapshotRepository(url: ossrhNexusSnapshot) {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            pom.project {
-                name "common-swing"
-                packaging 'jar'
-                description 'iSysCore Common Swing Library'
-                url 'https://github.com/isyscore/common-swing'
-                scm {
-                    connection 'https://github.com/isyscore/common-swing'
-                    developerConnection 'https://github.com/isyscore/common-swing'
-                    url 'https://github.com/isyscore/common-swing'
-                }
+            pom {
+                name = "common-swing"
+                description = "iSysCore Common Swing Library"
+                url = "https://github.com/isyscore/common-swing"
+                packaging = "jar"
+
                 licenses {
                     license {
-                        name 'MIT License'
-                        url 'https://github.com/isyscore/common-swing/blob/main/LICENSE'
+                        name = "MIT License"
+                        url = "https://github.com/isyscore/common-swing/blob/main/LICENSE"
                     }
                 }
                 developers {
                     developer {
-                        id 'isyscore'
-                        name 'isyscore'
-                        email 'hexj@isyscore.com'
+                        id = "isyscore"
+                        name = "isyscore"
+                        email = "hexj@isyscore.com"
                     }
                 }
+                scm {
+                    connection = "https://github.com/isyscore/common-swing"
+                    developerConnection =  "https://github.com/isyscore/common-swing"
+                    url = "https://github.com/isyscore/common-swing"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "Release"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = "$nexus_username"
+                password = "$nexus_password"
+            }
+        }
+        maven {
+            name = "Snapshot"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            credentials {
+                username = "$nexus_username"
+                password = "$nexus_password"
             }
         }
     }
 }
 
-
+signing {
+    sign publishing.publications.mavenKotlin
+}

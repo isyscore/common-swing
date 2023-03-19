@@ -185,7 +185,7 @@ fun <T> JPanel.list(model: ListModel<T>? = null, array: Array<T>? = null, vector
 fun JPanel.table(
     model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
     rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<*>? = null, vecColumnNames: Vector<*>? = null,
+    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
     arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
     position: String? = null, block: JTable.() -> Unit
 ): JTable {
@@ -240,6 +240,12 @@ fun JPanel.slider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max: Int 
     return sl
 }
 
+fun JPanel.box(axis: Int = 0, position: String? = null, block: Box.() -> Unit): Box {
+    val box = Box(axis).apply(block)
+    if (position != null) add(box, position) else add(box)
+    return box
+}
+
 inline fun<reified T: Component> JPanel.custom(position: String? = null, vararg params: Any, block: T.() -> Unit): T {
     val comp = newClassInstance<T>(*params).apply(block)
     if (position != null) add(comp, position) else add(comp)
@@ -250,4 +256,11 @@ fun<T: Component> JPanel.comp(position: String? = null, comp: T, block: T.() -> 
     comp.apply(block)
     if (position != null) add(comp, position) else add(comp)
     return comp
+}
+
+fun JPanel.browser(position: String? = null, block: Browser.() -> Unit): Browser {
+    val b = Browser().apply(block)
+    if (position != null) add(b, position) else add(b)
+    b.render()
+    return b
 }
