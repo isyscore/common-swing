@@ -2,10 +2,7 @@
 
 package com.isyscore.kotlin.swing.dsl
 
-import com.isyscore.kotlin.swing.component.BorderPanel
-import com.isyscore.kotlin.swing.component.ClearPanel
-import com.isyscore.kotlin.swing.component.HorzPanel
-import com.isyscore.kotlin.swing.component.VertPanel
+import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
 import java.awt.*
 import javax.swing.*
@@ -47,8 +44,8 @@ fun JTabbedPane.panelTab(title: String? = null, icon: Icon? = null, canClose: Bo
     return pnl
 }
 
-fun JTabbedPane.borderPanelTab(title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: BorderPanel.() -> Unit): BorderPanel {
-    val pnl = BorderPanel().apply(block)
+fun JTabbedPane.borderPanelTab(hgap: Int = 0, vgap: Int = 0, title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: BorderPanel.() -> Unit): BorderPanel {
+    val pnl = BorderPanel(hgap, vgap).apply(block)
     if (canClose) addTabWithClose(title, icon, pnl) else addTab(title, icon, pnl)
     return pnl
 }
@@ -59,14 +56,26 @@ fun JTabbedPane.clearPanelTab(title: String? = null, icon: Icon? = null, canClos
     return pnl
 }
 
-fun JTabbedPane.vertPanelTab(title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: VertPanel.() -> Unit): VertPanel {
-    val pnl = VertPanel().apply(block)
+fun JTabbedPane.vertPanelTab(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: VertPanel.() -> Unit): VertPanel {
+    val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
     if (canClose) addTabWithClose(title, icon, pnl) else addTab(title, icon, pnl)
     return pnl
 }
 
-fun JTabbedPane.horzPanelTab(title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: HorzPanel.() -> Unit): HorzPanel {
-    val pnl = HorzPanel().apply(block)
+fun JTabbedPane.horzPanelTab(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: HorzPanel.() -> Unit): HorzPanel {
+    val pnl = HorzPanel(align, hgap, vgap).apply(block)
+    if (canClose) addTabWithClose(title, icon, pnl) else addTab(title, icon, pnl)
+    return pnl
+}
+
+fun JTabbedPane.gridPanelTab(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0,  title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: GridPanel.() -> Unit): GridPanel {
+    val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
+    if (canClose) addTabWithClose(title, icon, pnl) else addTab(title, icon, pnl)
+    return pnl
+}
+
+fun JTabbedPane.wrapPanelTab(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: WrapPanel.() -> Unit): WrapPanel {
+    val pnl = WrapPanel(align, hgap, vgap).apply(block)
     if (canClose) addTabWithClose(title, icon, pnl) else addTab(title, icon, pnl)
     return pnl
 }

@@ -1,6 +1,5 @@
 package com.isyscore.kotlin.swing.component
 
-import com.isyscore.kotlin.swing.dsl.ContextDsl
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.IProgressHandler
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
@@ -8,14 +7,80 @@ import org.cef.CefApp
 import org.cef.CefClient
 import org.cef.CefSettings
 import org.cef.browser.CefBrowser
+import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
+import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.JPanel
+import kotlin.concurrent.thread
 
 class Browser : JPanel(BorderLayout()) {
+
+    class JavaScriptResponseHandle(private var responseHandle: String) {
+        var response: String? = null
+
+        override fun toString(): String = "responseHandle $responseHandle"
+        fun waitForCall(maximumMsWait: Long): Boolean {
+            val msStart = System.currentTimeMillis()
+            var isTimeout = false
+            while (response == null) {
+                Thread.sleep(50)
+                if (System.currentTimeMillis() > (maximumMsWait + msStart)) {
+                    isTimeout = true
+                    break
+                }
+            }
+            return isTimeout
+        }
+
+        fun stopWaiting(response: String?) {
+            this.response = response
+        }
+    }
+
+    class JavascriptResponseWaiter: CefMessageRouterHandlerAdapter() {
+        companion object {
+            private val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
+            private val CURRENT_HANDLE = AtomicInteger()
+
+        }
+        private val handles = mutableMapOf<String, JavaScriptResponseHandle>()
+
+        fun executeAndWaitForCallback(browser: CefBrowser, jsCall: String, maximumMsWait: Long): Pair<String?, Boolean> {
+            val uniqueResponseHandle = getUniqueResponseHandle()
+            val handle = JavaScriptResponseHandle(uniqueResponseHandle)
+            synchronized(handles) {
+                if (handles.containsKey(uniqueResponseHandle)) {
+                    throw RuntimeException("Duplicate response handle: $uniqueResponseHandle")
+                }
+                handles.put(uniqueResponseHandle, handle)
+            }
+            val call = CALL_TEMPLATE.format(jsCall, uniqueResponseHandle)
+            browser.executeJavaScript(call, "JavaScriptResponseWaiter.java/executeAndWaitForCallback", 55)
+            val isTimeout = handle.waitForCall(maximumMsWait)
+            return handle.response to isTimeout
+        }
+
+        override fun onQuery(browser: CefBrowser, frame: CefFrame?, queryId: Long, request: String, persistent: Boolean, callback: CefQueryCallback?): Boolean {
+            if (request.startsWith("JavaScriptResponseWaiter")) {
+                val handleAndResponse = request.substring("JavaScriptResponseWaiter".length + 1)
+                val indexOf = handleAndResponse.indexOf(",")
+                val handle = handleAndResponse.substring(0, indexOf)
+                val response = handleAndResponse.substring(indexOf + 1)
+                synchronized(handles) {
+                    val javaScriptResponseHandle = handles[handle]
+                    javaScriptResponseHandle?.stopWaiting(response)
+                }
+            }
+            return super.onQuery(browser, frame, queryId, request, persistent, callback)
+        }
+
+        private fun getUniqueResponseHandle(): String = CURRENT_HANDLE.incrementAndGet().toString()
+    }
 
     class BrowserConfig {
         internal val builder = CefAppBuilder()
@@ -37,7 +102,17 @@ class Browser : JPanel(BorderLayout()) {
         var url = "about:blank"
         var args: Array<String>? = null
         var isTransparent = false
+        internal val _handler =  mutableMapOf<CefMessageRouterHandler, Boolean>()
+
         val settings: CefSettings get() = builder.cefSettings
+
+        fun addMessageRouterHandler(h: CefMessageRouterHandler, first: Boolean) {
+            _handler[h] = first
+        }
+
+        fun removeMessageRouterHandler(h: CefMessageRouterHandler) {
+            _handler.remove(h)
+        }
 
         fun addRequestHandler(listener: CefRequestHandler) {
             _onRequest = listener
@@ -158,6 +233,7 @@ class Browser : JPanel(BorderLayout()) {
     private lateinit var cefApp: CefApp
     private lateinit var cefClient: CefClient
     private lateinit var cefBrowser: CefBrowser
+    private lateinit var cefJsHandler: JavascriptResponseWaiter
 
     val client: CefClient get() = cefClient
     val app: CefApp get() = cefApp
@@ -193,10 +269,43 @@ class Browser : JPanel(BorderLayout()) {
         cefClient.addLifeSpanHandler(_cfg._onLifeSpan)
 
         val msgRouter = CefMessageRouter.create()
+        cefJsHandler = JavascriptResponseWaiter()
+        msgRouter.addHandler(cefJsHandler, true)
+
+        _cfg._handler.forEach { (t, u) ->
+            msgRouter.addHandler(t, u)
+        }
         cefClient.addMessageRouter(msgRouter)
+
         cefBrowser = cefClient.createBrowser(_cfg.url, _cfg.builder.cefSettings.windowless_rendering_enabled, _cfg.isTransparent)
 
         val ui = cefBrowser.uiComponent
         add(ui, BorderLayout.CENTER)
     }
+
+    /**
+     * 以同步形式执行js并返回
+     * 当被执行的js拥有返回值时，将得到返回值，否则返回null
+     * 第二个返回参数为"是否超时"
+     */
+    fun executeJavaScriptSync(jsCall: String, timeout: Long = 5000): Pair<String?, Boolean> {
+        val callbackMethod = "function cefCallback(args) { window.cefQuery({ request : args, onFailure : function(error_code, error_message) { } }); }"
+        browser.executeJavaScript(callbackMethod, "isyscore/browser/callback.js", 0)
+        return cefJsHandler.executeAndWaitForCallback(browser, jsCall, timeout)
+    }
+
+    /**
+     * 以异步形式执行js并返回
+     * 当被执行的js拥有返回值时，将得到返回值，否则返回null
+     * 当第二个返回参数为"是否超时"
+     */
+    fun executeJavaScriptASync(jsCall: String, timeout: Long = 5000, callback: (String?, Boolean) -> Unit) {
+        val callbackMethod = "function cefCallback(args) { window.cefQuery({ request : args, onFailure : function(error_code, error_message) { } }); }"
+        browser.executeJavaScript(callbackMethod, "isyscore/browser/callback.js", 0)
+        thread {
+            val (ret, isTimeout) = cefJsHandler.executeAndWaitForCallback(browser, jsCall, timeout)
+            callback(ret, isTimeout)
+        }
+    }
 }
+

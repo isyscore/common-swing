@@ -255,13 +255,13 @@ class TestUI {
         val frame = rootFrame("Tab Sample") {
             contentBorderPanel {
                 pager(tabPlacement = JTabbedPane.TOP) {
-                    borderPanelTab("Welcome", canClose = false) {
+                    borderPanelTab(title = "Welcome", canClose = false) {
 
                     }
-                    borderPanelTab("Tab 1", canClose = true) {
+                    borderPanelTab(title = "Tab 1", canClose = true) {
 
                     }
-                    borderPanelTab("Tab 2", canClose = true) {
+                    borderPanelTab(title = "Tab 2", canClose = true) {
 
                     }
                 }
@@ -400,5 +400,82 @@ class TestUI {
             }
         }
     }
+
+    @Test
+    fun testCalc() {
+
+
+
+        val frame = rootFrame("Calc") {
+            contentBorderPanel {
+                horzPanel(position = NORTH) {
+                    val input1 = input {
+                        preferredSize = 100 x 30
+                    }
+                    label("+") {}
+                    val input2 = input {
+                        preferredSize = 100 x 30
+                    }
+                    lateinit var input3: JTextField
+                    button("=") {
+                        addActionListener {
+
+                        }
+                    }
+                    input3 = input {
+                        preferredSize = 100 x 30
+                        isEditable =  false
+                    }
+                }
+            }
+            size = 600 x 400
+            setLocationRelativeTo(null)
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    data class KeyEvt(val keyCode: String, val action: String)
+
+    @Test
+    fun testMapReduce() {
+        val k1 = KeyEvt("1", "down")
+        val k2 = KeyEvt("1", "up")
+        val k3 = KeyEvt("0", "down")
+        val k4 = KeyEvt("0", "up")
+        val k5 = KeyEvt("0", "down")
+        val k6 = KeyEvt("0", "up")
+        val karr = arrayOf(k1, k2, k3, k4, k5, k6)
+        val v = karr.filter { it.action == "up" }.map { it.keyCode }.reduce { acc, c -> acc + c }
+        println(v)
+    }
+
+    @Test
+    fun testFrame() {
+        val frame = rootFrame("sample") {
+            contentBorderPanel {
+                horzPanel(position = NORTH) {
+                    button("Click") {
+
+                    }
+                }
+            }
+            size = 600 x 400
+            setLocationRelativeTo(null)
+            isVisible = true
+        }
+        while (frame.isVisible) {
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
 
 }

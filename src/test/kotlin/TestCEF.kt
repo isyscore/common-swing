@@ -7,11 +7,15 @@ import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
+import org.cef.callback.CefQueryCallback
 import org.cef.handler.CefKeyboardHandler
 import org.cef.handler.CefKeyboardHandlerAdapter
 import org.cef.handler.CefLifeSpanHandlerAdapter
+import org.cef.handler.CefMessageRouterHandlerAdapter
 import org.junit.Test
 import java.beans.Visibility
+import java.lang.RuntimeException
+import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.JDialog
 import javax.swing.JFrame
 import kotlin.system.exitProcess
@@ -61,10 +65,78 @@ class TestCEF {
         }
     }
 
+    class JavaScriptResponseHandle(private var responseHandle: String) {
+        var response: String? = null
+
+        override fun toString(): String = "responseHandle $responseHandle"
+        fun waitForCall(maximumMsWait: Long) {
+            val msStart = System.currentTimeMillis()
+            while (response == null) {
+                Thread.sleep(100)
+                if (System.currentTimeMillis() > (maximumMsWait + msStart)) {
+                    println("Timeout, response not given!")
+                    break
+                }
+            }
+        }
+
+        fun stopWaiting(response: String?) {
+            this.response = response
+        }
+    }
+
+    class JavascriptResponseWaiter: CefMessageRouterHandlerAdapter() {
+        companion object {
+            private val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
+            private val CURRENT_HANDLE = AtomicInteger()
+
+        }
+        private val handles = mutableMapOf<String, JavaScriptResponseHandle>()
+
+        fun executeAndWaitForCallback(browser: CefBrowser, jsCall: String, maximumMsWait: Long): String? {
+            val uniqueResponseHandle = getUniqueResponseHandle()
+            val handle = JavaScriptResponseHandle(uniqueResponseHandle)
+            synchronized(handles) {
+                if (handles.containsKey(uniqueResponseHandle)) {
+                    throw RuntimeException("Duplicate response handle: $uniqueResponseHandle")
+                }
+                handles.put(uniqueResponseHandle, handle)
+            }
+            val call = CALL_TEMPLATE.format(jsCall, uniqueResponseHandle)
+            browser.executeJavaScript(call, "JavaScriptResponseWaiter.java/executeAndWaitForCallback", 55)
+            handle.waitForCall(maximumMsWait)
+            return handle.response
+        }
+
+        override fun onQuery(
+            browser: CefBrowser,
+            frame: CefFrame?,
+            queryId: Long,
+            request: String,
+            persistent: Boolean,
+            callback: CefQueryCallback?
+        ): Boolean {
+            if (request.startsWith("JavaScriptResponseWaiter")) {
+                val handleAndResponse = request.substring("JavaScriptResponseWaiter".length + 1)
+                val indexOf = handleAndResponse.indexOf(",")
+                val handle = handleAndResponse.substring(0, indexOf)
+                val response = handleAndResponse.substring(indexOf + 1)
+                println("Got response $request; Response for handle $handle; response = $response")
+                synchronized(handles) {
+                    val javaScriptResponseHandle = handles[handle]
+                    javaScriptResponseHandle?.stopWaiting(response)
+                }
+            }
+            return super.onQuery(browser, frame, queryId, request, persistent, callback)
+        }
+
+        private fun getUniqueResponseHandle(): String = CURRENT_HANDLE.incrementAndGet().toString()
+    }
 
     @Test
     fun testCefDSL() {
         UI.lookAndFeel(UIStyle.Light)
+
 
         val frame = rootFrame("CEF") {
             defaultCloseOperation = JFrame.EXIT_ON_CLOSE
@@ -76,18 +148,8 @@ class TestCEF {
                         addExitListener {
                             exitProcess(0)
                         }
-                        addLifeSpanHandler(object : CefLifeSpanHandlerAdapter() {
-                            override fun onBeforePopup(
-                                sender: CefBrowser,
-                                frame: CefFrame?,
-                                targetUrl: String?,
-                                targetFrameName: String?
-                            ): Boolean {
-                                sender.loadURL(targetUrl)
-                                return true
-                            }
-                        })
                         addKeyboardHandler(object: CefKeyboardHandlerAdapter() {})
+                        addMessageRouterHandler(JavascriptResponseWaiter(), true)
                     }
                 }
             }

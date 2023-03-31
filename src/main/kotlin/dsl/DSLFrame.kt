@@ -1,13 +1,9 @@
 package com.isyscore.kotlin.swing.dsl
 
-import com.isyscore.kotlin.swing.component.BorderPanel
-import com.isyscore.kotlin.swing.component.ClearPanel
-import com.isyscore.kotlin.swing.component.HorzPanel
-import com.isyscore.kotlin.swing.component.VertPanel
+import com.isyscore.kotlin.swing.component.*
 import java.awt.*
 import javax.swing.JDialog
 import javax.swing.JFrame
-import javax.swing.JLayeredPane
 import javax.swing.JPanel
 
 @ContextDsl
@@ -25,8 +21,8 @@ fun JFrame.contentPanel(layout: LayoutManager? = BorderLayout(), block: JPanel.(
     return pnl
 }
 
-fun JFrame.contentBorderPanel(block: BorderPanel.() -> Unit): BorderPanel {
-    val pnl = BorderPanel().apply(block)
+fun JFrame.contentBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel {
+    val pnl = BorderPanel(hgap, vgap).apply(block)
     contentPane = pnl
     return pnl
 }
@@ -37,14 +33,26 @@ fun JFrame.contentClearPanel(block: ClearPanel.() -> Unit): ClearPanel {
     return pnl
 }
 
-fun JFrame.contentVertPanel(block: VertPanel.() -> Unit): VertPanel {
-    val pnl = VertPanel().apply(block)
+fun JFrame.contentVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel {
+    val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
     contentPane = pnl
     return pnl
 }
 
-fun JFrame.contentHorzPanel(block: HorzPanel.() -> Unit): HorzPanel {
-    val pnl = HorzPanel().apply(block)
+fun JFrame.contentHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel {
+    val pnl = HorzPanel(align, hgap, vgap).apply(block)
+    contentPane = pnl
+    return pnl
+}
+
+fun JFrame.contentGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel {
+    val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
+    contentPane = pnl
+    return pnl
+}
+
+fun JFrame.contentWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel {
+    val pnl = WrapPanel(align, hgap, vgap).apply(block)
     contentPane = pnl
     return pnl
 }
@@ -55,8 +63,8 @@ fun JDialog.contentPanel(layout: LayoutManager? = BorderLayout(), block: JPanel.
     return pnl
 }
 
-fun JDialog.contentBorderPanel(block: BorderPanel.() -> Unit): BorderPanel {
-    val pnl = BorderPanel().apply(block)
+fun JDialog.contentBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel {
+    val pnl = BorderPanel(hgap, vgap).apply(block)
     contentPane = pnl
     return pnl
 }
@@ -67,14 +75,26 @@ fun JDialog.contentClearPanel(block: ClearPanel.() -> Unit): ClearPanel {
     return pnl
 }
 
-fun JDialog.contentVertPanel(block: VertPanel.() -> Unit): VertPanel {
-    val pnl = VertPanel().apply(block)
+fun JDialog.contentVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel {
+    val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
     contentPane = pnl
     return pnl
 }
 
-fun JDialog.contentHorzPanel(block: HorzPanel.() -> Unit): HorzPanel {
-    val pnl = HorzPanel().apply(block)
+fun JDialog.contentHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel {
+    val pnl = HorzPanel(align, hgap, vgap).apply(block)
+    contentPane = pnl
+    return pnl
+}
+
+fun JDialog.contentGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel {
+    val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
+    contentPane = pnl
+    return pnl
+}
+
+fun JDialog.contentWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel {
+    val pnl = WrapPanel(align, hgap, vgap).apply(block)
     contentPane = pnl
     return pnl
 }

@@ -6,6 +6,7 @@ import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.FlowLayout
 import java.awt.LayoutManager
 import java.net.URL
 import java.util.*
@@ -19,16 +20,23 @@ import javax.swing.tree.TreeNode
 fun rootPanel(layout: LayoutManager? = BorderLayout(), block: JPanel.() -> Unit): JPanel = JPanel(layout).apply(block)
 
 @ContextDsl
-fun rootBorderPanel(block: BorderPanel.() -> Unit): BorderPanel = BorderPanel().apply(block)
+fun rootBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel = BorderPanel(hgap, vgap).apply(block)
 
 @ContextDsl
 fun rootClearPanel(block: ClearPanel.() -> Unit): ClearPanel = ClearPanel().apply(block)
 
 @ContextDsl
-fun rootVertPanel(block: VertPanel.() -> Unit): VertPanel = VertPanel().apply(block)
+fun rootVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
 
 @ContextDsl
-fun rootHorzPanel(block: HorzPanel.() -> Unit): HorzPanel = HorzPanel().apply(block)
+fun rootHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel = HorzPanel(align, hgap, vgap).apply(block)
+
+@ContextDsl
+fun rootGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel = GridPanel(rows, cols, hgap, vgap).apply(block)
+
+@ContextDsl
+fun rootWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = WrapPanel(align, hgap, vgap).apply(block)
+
 
 fun JPanel.panel(layout: LayoutManager? = BorderLayout(), position: String? = null, block: JPanel.() -> Unit): JPanel {
     val pnl = JPanel(layout).apply(block)
@@ -36,8 +44,8 @@ fun JPanel.panel(layout: LayoutManager? = BorderLayout(), position: String? = nu
     return pnl
 }
 
-fun JPanel.borderPanel(position: String? = null, block: BorderPanel.() -> Unit): BorderPanel {
-    val pnl = BorderPanel().apply(block)
+fun JPanel.borderPanel(hgap: Int = 0, vgap: Int = 0, position: String? = null, block: BorderPanel.() -> Unit): BorderPanel {
+    val pnl = BorderPanel(hgap, vgap).apply(block)
     if (position != null) add(pnl, position) else add(pnl)
     return pnl
 }
@@ -48,14 +56,26 @@ fun JPanel.clearPanel(position: String? = null, block: ClearPanel.() -> Unit): C
     return pnl
 }
 
-fun JPanel.vertPanel(position: String? = null, block: VertPanel.() -> Unit): VertPanel {
-    val pnl = VertPanel().apply(block)
+fun JPanel.vertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, position: String? = null, block: VertPanel.() -> Unit): VertPanel {
+    val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
     if (position != null) add(pnl, position) else add(pnl)
     return pnl
 }
 
-fun JPanel.horzPanel(position: String? = null, block: HorzPanel.() -> Unit): HorzPanel {
-    val pnl = HorzPanel().apply(block)
+fun JPanel.horzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, position: String? = null, block: HorzPanel.() -> Unit): HorzPanel {
+    val pnl = HorzPanel(align, hgap, vgap).apply(block)
+    if (position != null) add(pnl, position) else add(pnl)
+    return pnl
+}
+
+fun JPanel.gridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, position: String? = null, block: GridPanel.() -> Unit): GridPanel {
+    val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
+    if (position != null) add(pnl, position) else add(pnl)
+    return pnl
+}
+
+fun JPanel.wrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, position: String? = null, block: WrapPanel.() -> Unit): WrapPanel {
+    val pnl = WrapPanel(align, hgap, vgap).apply(block)
     if (position != null) add(pnl, position) else add(pnl)
     return pnl
 }

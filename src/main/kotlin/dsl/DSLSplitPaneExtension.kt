@@ -5,6 +5,7 @@ package com.isyscore.kotlin.swing.dsl
 import com.isyscore.kotlin.swing.component.*
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.FlowLayout
 import java.awt.LayoutManager
 import java.net.URL
 import java.util.*
@@ -32,8 +33,8 @@ fun JSplitPane.rightPanel(layout: LayoutManager? = BorderLayout(), block: JPanel
 fun JSplitPane.topPanel(layout: LayoutManager? = BorderLayout(), block: JPanel.() -> Unit): JPanel = panel(layout, JSplitPane.TOP, block)
 fun JSplitPane.bottomPanel(layout: LayoutManager? = BorderLayout(), block: JPanel.() -> Unit): JPanel = panel(layout, JSplitPane.BOTTOM, block)
 
-fun JSplitPane.borderPanel(position: String = JSplitPane.LEFT, block: BorderPanel.() -> Unit): BorderPanel {
-    val pnl = BorderPanel().apply(block)
+fun JSplitPane.borderPanel(hgap: Int = 0, vgap: Int = 0, position: String = JSplitPane.LEFT, block: BorderPanel.() -> Unit): BorderPanel {
+    val pnl = BorderPanel(hgap, vgap).apply(block)
     when(position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
@@ -43,10 +44,10 @@ fun JSplitPane.borderPanel(position: String = JSplitPane.LEFT, block: BorderPane
     return pnl
 }
 
-fun JSplitPane.leftBorderPanel(block: BorderPanel.() -> Unit): BorderPanel = borderPanel(JSplitPane.LEFT, block)
-fun JSplitPane.rightBorderPanel(block: BorderPanel.() -> Unit): BorderPanel = borderPanel(JSplitPane.RIGHT, block)
-fun JSplitPane.topBorderPanel(block: BorderPanel.() -> Unit): BorderPanel = borderPanel(JSplitPane.TOP, block)
-fun JSplitPane.bottomBorderPanel(block: BorderPanel.() -> Unit): BorderPanel = borderPanel(JSplitPane.BOTTOM, block)
+fun JSplitPane.leftBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel = borderPanel(hgap, vgap, JSplitPane.LEFT, block)
+fun JSplitPane.rightBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel = borderPanel(hgap, vgap, JSplitPane.RIGHT, block)
+fun JSplitPane.topBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel = borderPanel(hgap, vgap, JSplitPane.TOP, block)
+fun JSplitPane.bottomBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel = borderPanel(hgap, vgap, JSplitPane.BOTTOM, block)
 
 fun JSplitPane.clearPanel(position: String = JSplitPane.LEFT, block: ClearPanel.() -> Unit): ClearPanel {
     val pnl = ClearPanel().apply(block)
@@ -64,8 +65,8 @@ fun JSplitPane.rightClearPanel(block: ClearPanel.() -> Unit): ClearPanel = clear
 fun JSplitPane.topClearPanel(block: ClearPanel.() -> Unit): ClearPanel = clearPanel(JSplitPane.TOP, block)
 fun JSplitPane.bottomClearPanel(block: ClearPanel.() -> Unit): ClearPanel = clearPanel(JSplitPane.BOTTOM, block)
 
-fun JSplitPane.vertPanel(position: String = JSplitPane.LEFT, block: VertPanel.() -> Unit): VertPanel {
-    val pnl = VertPanel().apply(block)
+fun JSplitPane.vertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, position: String = JSplitPane.LEFT, block: VertPanel.() -> Unit): VertPanel {
+    val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
     when(position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
@@ -75,13 +76,14 @@ fun JSplitPane.vertPanel(position: String = JSplitPane.LEFT, block: VertPanel.()
     return pnl
 }
 
-fun JSplitPane.leftVertPanel(block: VertPanel.() -> Unit): VertPanel = vertPanel(JSplitPane.LEFT, block)
-fun JSplitPane.rightVertPanel(block: VertPanel.() -> Unit): VertPanel = vertPanel(JSplitPane.RIGHT, block)
-fun JSplitPane.topVertPanel(block: VertPanel.() -> Unit): VertPanel = vertPanel(JSplitPane.TOP, block)
-fun JSplitPane.bottomVertPanel(block: VertPanel.() -> Unit): VertPanel = vertPanel(JSplitPane.BOTTOM, block)
+fun JSplitPane.leftVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill, JSplitPane.LEFT, block)
+fun JSplitPane.rightVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill,JSplitPane.RIGHT, block)
+fun JSplitPane.topVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill,JSplitPane.TOP, block)
+fun JSplitPane.bottomVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill,JSplitPane.BOTTOM, block)
 
-fun JSplitPane.horzPanel(position: String = JSplitPane.LEFT, block: HorzPanel.() -> Unit): HorzPanel {
-    val pnl = HorzPanel().apply(block)
+
+fun JSplitPane.horzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, position: String = JSplitPane.LEFT, block: HorzPanel.() -> Unit): HorzPanel {
+    val pnl = HorzPanel(align, hgap, vgap).apply(block)
     when(position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
@@ -91,10 +93,44 @@ fun JSplitPane.horzPanel(position: String = JSplitPane.LEFT, block: HorzPanel.()
     return pnl
 }
 
-fun JSplitPane.leftHorzPanel(block: HorzPanel.() -> Unit): HorzPanel = horzPanel(JSplitPane.LEFT, block)
-fun JSplitPane.rightHorzPanel(block: HorzPanel.() -> Unit): HorzPanel = horzPanel(JSplitPane.RIGHT, block)
-fun JSplitPane.topHorzPanel(block: HorzPanel.() -> Unit): HorzPanel = horzPanel(JSplitPane.TOP, block)
-fun JSplitPane.bottomHorzPanel(block: HorzPanel.() -> Unit): HorzPanel = horzPanel(JSplitPane.BOTTOM, block)
+fun JSplitPane.leftHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel = horzPanel(align, hgap, vgap, JSplitPane.LEFT, block)
+fun JSplitPane.rightHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel = horzPanel(align, hgap, vgap, JSplitPane.RIGHT, block)
+fun JSplitPane.topHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel = horzPanel(align, hgap, vgap, JSplitPane.TOP, block)
+fun JSplitPane.bottomHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel = horzPanel(align, hgap, vgap, JSplitPane.BOTTOM, block)
+
+fun JSplitPane.gridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, position: String = JSplitPane.LEFT, block: GridPanel.() -> Unit): GridPanel {
+    val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
+    when(position) {
+        JSplitPane.LEFT -> leftComponent = pnl
+        JSplitPane.RIGHT -> rightComponent = pnl
+        JSplitPane.TOP -> topComponent = pnl
+        JSplitPane.BOTTOM -> bottomComponent = pnl
+    }
+    return pnl
+}
+
+fun JSplitPane.leftGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel = gridPanel(rows, cols, hgap, vgap, JSplitPane.LEFT, block)
+fun JSplitPane.rightGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel = gridPanel(rows, cols, hgap, vgap, JSplitPane.RIGHT, block)
+fun JSplitPane.topGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel = gridPanel(rows, cols, hgap, vgap, JSplitPane.TOP, block)
+fun JSplitPane.bottomGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel = gridPanel(rows, cols, hgap, vgap, JSplitPane.BOTTOM, block)
+
+
+fun JSplitPane.wrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, position: String = JSplitPane.LEFT, block: WrapPanel.() -> Unit): WrapPanel {
+    val pnl = WrapPanel(align, hgap, vgap).apply(block)
+    when(position) {
+        JSplitPane.LEFT -> leftComponent = pnl
+        JSplitPane.RIGHT -> rightComponent = pnl
+        JSplitPane.TOP -> topComponent = pnl
+        JSplitPane.BOTTOM -> bottomComponent = pnl
+    }
+    return pnl
+}
+
+fun JSplitPane.leftWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = wrapPanel(align, hgap, vgap, JSplitPane.LEFT, block)
+fun JSplitPane.rightWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = wrapPanel(align, hgap, vgap, JSplitPane.RIGHT, block)
+fun JSplitPane.topWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = wrapPanel(align, hgap, vgap, JSplitPane.TOP, block)
+fun JSplitPane.bottomWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = wrapPanel(align, hgap, vgap, JSplitPane.BOTTOM, block)
+
 
 fun JSplitPane.pager(tabPlacement: Int = JTabbedPane.TOP, tabLayoutPolicy: Int = JTabbedPane.SCROLL_TAB_LAYOUT, position: String = JSplitPane.LEFT, block: JTabbedPane.() -> Unit): JTabbedPane {
     val pager = JTabbedPane(tabPlacement, tabLayoutPolicy).apply(block)

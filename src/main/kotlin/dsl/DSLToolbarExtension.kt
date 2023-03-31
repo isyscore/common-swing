@@ -6,6 +6,7 @@ import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.FlowLayout
 import java.awt.LayoutManager
 import java.net.URL
 import java.util.*
@@ -24,8 +25,8 @@ fun JToolBar.panel(layout: LayoutManager? = BorderLayout(), block: JPanel.() -> 
     return pnl
 }
 
-fun JToolBar.borderPanel(block: BorderPanel.() -> Unit): BorderPanel {
-    val pnl = BorderPanel().apply(block)
+fun JToolBar.borderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPanel.() -> Unit): BorderPanel {
+    val pnl = BorderPanel(hgap, vgap).apply(block)
     add(pnl)
     return pnl
 }
@@ -36,14 +37,26 @@ fun JToolBar.clearPanel(block: ClearPanel.() -> Unit): ClearPanel {
     return pnl
 }
 
-fun JToolBar.vertPanel(block: VertPanel.() -> Unit): VertPanel {
-    val pnl = VertPanel().apply(block)
+fun JToolBar.vertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel {
+    val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
     add(pnl)
     return pnl
 }
 
-fun JToolBar.horzPanel(block: HorzPanel.() -> Unit): HorzPanel {
-    val pnl = HorzPanel().apply(block)
+fun JToolBar.horzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, block: HorzPanel.() -> Unit): HorzPanel {
+    val pnl = HorzPanel(align, hgap, vgap).apply(block)
+    add(pnl)
+    return pnl
+}
+
+fun JToolBar.gridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, block: GridPanel.() -> Unit): GridPanel {
+    val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
+    add(pnl)
+    return pnl
+}
+
+fun JToolBar.wrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel {
+    val pnl = WrapPanel(align, hgap, vgap).apply(block)
     add(pnl)
     return pnl
 }
