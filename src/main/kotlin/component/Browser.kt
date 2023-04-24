@@ -44,7 +44,7 @@ class Browser : JPanel(BorderLayout()) {
 
     class JavascriptResponseWaiter: CefMessageRouterHandlerAdapter() {
         companion object {
-            private val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
+            private const val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
             private val CURRENT_HANDLE = AtomicInteger()
 
         }

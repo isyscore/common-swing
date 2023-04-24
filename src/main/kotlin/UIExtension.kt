@@ -26,10 +26,6 @@ import com.jtattoo.plaf.mint.MintLookAndFeel
 import com.jtattoo.plaf.noire.NoireLookAndFeel
 import com.jtattoo.plaf.smart.SmartLookAndFeel
 import com.jtattoo.plaf.texture.TextureLookAndFeel
-import com.sun.java.swing.plaf.gtk.GTKLookAndFeel
-import com.sun.java.swing.plaf.motif.MotifLookAndFeel
-import com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel
 import java.awt.GraphicsEnvironment
 import java.awt.Image
 import java.awt.Toolkit
@@ -40,8 +36,7 @@ import javax.swing.UIManager
 import javax.swing.plaf.metal.MetalLookAndFeel
 
 enum class UIStyle {
-    Light, Dark, Darcula, Intellij, Metal, Motif, Windows, WindowsClassic, GTK,
-    Acryl, Aero, Aluminium, Bernstein, Fast, HiFi, McWin, Mint, Noire, Smart, Luna, Texture, Graphite
+    Light, Dark, Darcula, Intellij, Metal, Acryl, Aero, Aluminium, Bernstein, Fast, HiFi, McWin, Mint, Noire, Smart, Luna, Texture, Graphite
 }
 
 object UI {
@@ -55,30 +50,28 @@ object UI {
     fun lookAndFeel(style: UIStyle, decorated: Boolean = true) {
         JFrame.setDefaultLookAndFeelDecorated(decorated)
         JDialog.setDefaultLookAndFeelDecorated(decorated)
-        UIManager.setLookAndFeel(when(style) {
-            UIStyle.Light -> if (isMac) FlatMacLightLaf() else FlatLightLaf()
-            UIStyle.Dark -> if (isMac) FlatMacDarkLaf() else FlatMacDarkLaf()
-            UIStyle.Darcula -> FlatDarculaLaf()
-            UIStyle.Intellij -> FlatIntelliJLaf()
-            UIStyle.Metal -> MetalLookAndFeel()
-            UIStyle.Motif -> MotifLookAndFeel()
-            UIStyle.Windows -> if (isWindows) WindowsLookAndFeel() else FlatLightLaf()
-            UIStyle.WindowsClassic -> if (isWindows) WindowsClassicLookAndFeel() else FlatLightLaf()
-            UIStyle.GTK -> if (isUnix) GTKLookAndFeel() else FlatLightLaf()
-            UIStyle.Acryl -> AcrylLookAndFeel()
-            UIStyle.Aero -> AeroLookAndFeel()
-            UIStyle.Aluminium -> AluminiumLookAndFeel()
-            UIStyle.Bernstein -> BernsteinLookAndFeel()
-            UIStyle.Fast -> FastLookAndFeel()
-            UIStyle.HiFi -> HiFiLookAndFeel()
-            UIStyle.McWin -> McWinLookAndFeel()
-            UIStyle.Mint -> MintLookAndFeel()
-            UIStyle.Noire -> NoireLookAndFeel()
-            UIStyle.Smart -> SmartLookAndFeel()
-            UIStyle.Luna -> LunaLookAndFeel()
-            UIStyle.Texture -> TextureLookAndFeel()
-            UIStyle.Graphite -> GraphiteLookAndFeel()
-        })
+        UIManager.setLookAndFeel(
+            when (style) {
+                UIStyle.Light -> if (isMac) FlatMacLightLaf() else FlatLightLaf()
+                UIStyle.Dark -> if (isMac) FlatMacDarkLaf() else FlatMacDarkLaf()
+                UIStyle.Darcula -> FlatDarculaLaf()
+                UIStyle.Intellij -> FlatIntelliJLaf()
+                UIStyle.Metal -> MetalLookAndFeel()
+                UIStyle.Acryl -> AcrylLookAndFeel()
+                UIStyle.Aero -> AeroLookAndFeel()
+                UIStyle.Aluminium -> AluminiumLookAndFeel()
+                UIStyle.Bernstein -> BernsteinLookAndFeel()
+                UIStyle.Fast -> FastLookAndFeel()
+                UIStyle.HiFi -> HiFiLookAndFeel()
+                UIStyle.McWin -> McWinLookAndFeel()
+                UIStyle.Mint -> MintLookAndFeel()
+                UIStyle.Noire -> NoireLookAndFeel()
+                UIStyle.Smart -> SmartLookAndFeel()
+                UIStyle.Luna -> LunaLookAndFeel()
+                UIStyle.Texture -> TextureLookAndFeel()
+                UIStyle.Graphite -> GraphiteLookAndFeel()
+            }
+        )
     }
 
     object Mac {
@@ -110,11 +103,13 @@ object UI {
          */
         fun setAppearance(appearance: MacAppearance) {
             if (isMac) {
-                System.setProperty("apple.awt.application.appearance", when(appearance) {
-                    MacAppearance.SYSTEM -> "system"
-                    MacAppearance.LIGHT -> "light"
-                    MacAppearance.DARK -> "dark"
-                })
+                System.setProperty(
+                    "apple.awt.application.appearance", when (appearance) {
+                        MacAppearance.SYSTEM -> "system"
+                        MacAppearance.LIGHT -> "light"
+                        MacAppearance.DARK -> "dark"
+                    }
+                )
             }
         }
 
@@ -138,9 +133,19 @@ object UI {
             }
         }
 
-        private class AboutAdapter(private val owner: Window, val handler: (Window) -> Unit): AboutHandler {
+        private class AboutAdapter(private val owner: Window, val handler: (Window) -> Unit) : AboutHandler {
             override fun handleAbout(e: AppEvent.AboutEvent?) {
                 handler(owner)
+            }
+        }
+
+        private fun showAbout(owner: Window, handler: (Window) -> Unit) {
+            if (isMac) {
+                val cApplication = Class.forName("com.apple.eawt.Application")
+                val mGetApp = cApplication.getDeclaredMethod("getApplication")
+                val oApp = mGetApp.invoke(null)
+                val mSetAboutHandler = cApplication.getDeclaredMethod("setAboutHandler", AboutHandler::class.java)
+                mSetAboutHandler.invoke(oApp, AboutAdapter(owner, handler))
             }
         }
 
@@ -148,26 +153,14 @@ object UI {
          * 替换 Mac 的关于对话框
          */
         fun JFrame.hookAbout(handler: (Window) -> Unit) {
-            if (isMac) {
-                val cApplication = Class.forName("com.apple.eawt.Application")
-                val mGetApp = cApplication.getDeclaredMethod("getApplication")
-                val oApp = mGetApp.invoke(null)
-                val mSetAboutHandler = cApplication.getDeclaredMethod("setAboutHandler", AboutHandler::class.java)
-                mSetAboutHandler.invoke(oApp, AboutAdapter(this, handler))
-            }
+            showAbout(this, handler)
         }
 
         /**
          * 替换 Mac 的关于对话框
          */
         fun JDialog.hookAbout(handler: (Window) -> Unit) {
-            if (isMac) {
-                val cApplication = Class.forName("com.apple.eawt.Application")
-                val mGetApp = cApplication.getDeclaredMethod("getApplication")
-                val oApp = mGetApp.invoke(null)
-                val mSetAboutHandler = cApplication.getDeclaredMethod("setAboutHandler", AboutHandler::class.java)
-                mSetAboutHandler.invoke(oApp, AboutAdapter(this, handler))
-            }
+            showAbout(this, handler)
         }
 
         /**
@@ -182,7 +175,5 @@ object UI {
                 mSetDockImage.invoke(oApp, image)
             }
         }
-
     }
-
 }

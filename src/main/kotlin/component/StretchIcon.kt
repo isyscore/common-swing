@@ -7,43 +7,51 @@ import java.awt.Image
 import java.net.URL
 import javax.swing.ImageIcon
 
-open class StretchIcon: ImageIcon {
+open class StretchIcon : ImageIcon {
 
-    protected var proportionate = true
+    private var proportionate = true
 
-    constructor(imageData: ByteArray): super(imageData)
-    constructor(imageData: ByteArray, proportionate: Boolean): super(imageData) {
-        this.proportionate = proportionate
-    }
-    constructor(imageData: ByteArray, description: String): super(imageData, description)
-    constructor(imageData: ByteArray, description: String, proportionate: Boolean): super(imageData, description) {
-        this.proportionate = proportionate
-    }
-    constructor(image: Image): super(image)
-    constructor(image: Image, proportionate: Boolean): super(image) {
-        this.proportionate = proportionate
-    }
-    constructor(image: Image, description: String): super(image, description)
-    constructor(image: Image, description: String, proportionate: Boolean): super(image, description) {
-        this.proportionate = proportionate
-    }
-    constructor(filename: String): super(filename)
-    constructor(filename: String, proportionate: Boolean): super(filename) {
-        this.proportionate = proportionate
-    }
-    constructor(filename: String, description: String): super(filename, description)
-    constructor(filename: String, description: String, proportionate: Boolean): super(filename, description) {
-        this.proportionate = proportionate
-    }
-    constructor(location: URL): super(location)
-    constructor(location: URL, proportionate: Boolean): super(location) {
-        this.proportionate = proportionate
-    }
-    constructor(location: URL, description: String): super(location, description)
-    constructor(location: URL, description: String, proportionate: Boolean): super(location, description) {
+    constructor(imageData: ByteArray) : super(imageData)
+    constructor(imageData: ByteArray, proportionate: Boolean) : super(imageData) {
         this.proportionate = proportionate
     }
 
+    constructor(imageData: ByteArray, description: String) : super(imageData, description)
+    constructor(imageData: ByteArray, description: String, proportionate: Boolean) : super(imageData, description) {
+        this.proportionate = proportionate
+    }
+
+    constructor(image: Image) : super(image)
+    constructor(image: Image, proportionate: Boolean) : super(image) {
+        this.proportionate = proportionate
+    }
+
+    constructor(image: Image, description: String) : super(image, description)
+    constructor(image: Image, description: String, proportionate: Boolean) : super(image, description) {
+        this.proportionate = proportionate
+    }
+
+    constructor(filename: String) : super(filename)
+    constructor(filename: String, proportionate: Boolean) : super(filename) {
+        this.proportionate = proportionate
+    }
+
+    constructor(filename: String, description: String) : super(filename, description)
+    constructor(filename: String, description: String, proportionate: Boolean) : super(filename, description) {
+        this.proportionate = proportionate
+    }
+
+    constructor(location: URL) : super(location)
+    constructor(location: URL, proportionate: Boolean) : super(location) {
+        this.proportionate = proportionate
+    }
+
+    constructor(location: URL, description: String) : super(location, description)
+    constructor(location: URL, description: String, proportionate: Boolean) : super(location, description) {
+        this.proportionate = proportionate
+    }
+
+    @Suppress("NAME_SHADOWING", "VARIABLE_WITH_REDUNDANT_INITIALIZER")
     @Synchronized
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
         var x = x

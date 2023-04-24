@@ -1,18 +1,12 @@
-import com.isyscore.kotlin.swing.component.BorderPanel
 import com.isyscore.kotlin.swing.component.StretchIcon
-import com.isyscore.kotlin.swing.component.WrapLayout
 import com.isyscore.kotlin.swing.dsl.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.junit.Test
 import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.FlowLayout
-import java.awt.LayoutManager
 import java.net.URL
-import javax.swing.BorderFactory
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.JScrollPane
 
 class TestGrid {
 
@@ -66,7 +60,7 @@ class TestGrid {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }

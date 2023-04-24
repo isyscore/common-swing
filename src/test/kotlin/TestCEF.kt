@@ -8,15 +8,10 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
 import org.cef.callback.CefQueryCallback
-import org.cef.handler.CefKeyboardHandler
 import org.cef.handler.CefKeyboardHandlerAdapter
-import org.cef.handler.CefLifeSpanHandlerAdapter
 import org.cef.handler.CefMessageRouterHandlerAdapter
 import org.junit.Test
-import java.beans.Visibility
-import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicInteger
-import javax.swing.JDialog
 import javax.swing.JFrame
 import kotlin.system.exitProcess
 
@@ -35,7 +30,7 @@ class TestCEF {
                 override fun stateHasChanged(state: CefApp.CefAppState?) {
                     if (state == CefApp.CefAppState.TERMINATED) {
                         exitProcess(0)
-                    };
+                    }
                 }
             })
             // addJcefArgs()
@@ -46,8 +41,6 @@ class TestCEF {
         client.addMessageRouter(msgRouter)
         val browser = client.createBrowser("https://www.bilibili.com", false, false)
         val bUI = browser.uiComponent
-
-
 
         frame.contentPane = rootBorderPanel {
             add(bUI)
@@ -60,7 +53,7 @@ class TestCEF {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -87,7 +80,7 @@ class TestCEF {
 
     class JavascriptResponseWaiter: CefMessageRouterHandlerAdapter() {
         companion object {
-            private val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
+            private const val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
             private val CURRENT_HANDLE = AtomicInteger()
 
         }
@@ -137,14 +130,13 @@ class TestCEF {
     fun testCefDSL() {
         UI.lookAndFeel(UIStyle.Light)
 
-
         val frame = rootFrame("CEF") {
             defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             contentBorderPanel {
                 browser {
                     config {
                         settings.windowless_rendering_enabled = false
-                        url = "http://10.30.30.78:38080" // ""https://www.baidu.com" // "http://10.30.30.78:38080" //"https://html5test.com"
+                        url = "http://10.30.30.78:38080" // "https://www.baidu.com" // "http://10.30.30.78:38080" //"https://html5test.com"
                         addExitListener {
                             exitProcess(0)
                         }
@@ -160,9 +152,10 @@ class TestCEF {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
+
     }
 
 }

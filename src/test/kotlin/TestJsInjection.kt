@@ -9,16 +9,15 @@ import com.isyscore.kotlin.swing.runOnMainThread
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
-import org.cef.handler.*
-import org.cef.misc.BoolRef
+import org.cef.handler.CefKeyboardHandler
+import org.cef.handler.CefKeyboardHandlerAdapter
+import org.cef.handler.CefLoadHandlerAdapter
 import org.cef.network.CefCookie
 import org.cef.network.CefCookieManager
 import org.junit.Test
-import sun.util.resources.de.CalendarData_de
 import java.awt.BorderLayout
 import java.io.File
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 import javax.swing.JFrame
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
@@ -33,7 +32,7 @@ class TestJsInjection {
     /**
      * 异步登录接口，回调在子线程
      */
-    fun loginAsync(host: String, port: Int, userName: String, password: String, callback:(Map<String, Any>) -> Unit) {
+    private fun loginAsync(host: String, port: Int, userName: String, password: String, callback:(Map<String, Any>) -> Unit) {
         thread {
             val m = mutableMapOf<String, Any>()
             val ret = http {
@@ -166,7 +165,7 @@ class TestJsInjection {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }

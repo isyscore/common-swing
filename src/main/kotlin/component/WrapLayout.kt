@@ -51,7 +51,7 @@ class WrapLayout : FlowLayout {
                         rowWidth += hg
                     }
                     rowWidth += d.width
-                    rowHeight = Math.max(rowHeight, d.height)
+                    rowHeight = max(rowHeight, d.height)
                 }
             }
             addRow(dim, rowWidth, rowHeight)

@@ -4,14 +4,13 @@ import org.junit.Test
 import java.awt.Color
 import java.awt.Component
 import javax.swing.DefaultComboBoxModel
-import javax.swing.JButton
 import javax.swing.JComboBox
 
 // test for generic type
 
 class TestGT {
 
-    inline fun<reified T: Component> custom(vararg params: Any, block: T.() -> Unit): T {
+    private inline fun<reified T: Component> custom(vararg params: Any, block: T.() -> Unit): T {
         return newClassInstance<T>(*params).apply(block)
     }
 

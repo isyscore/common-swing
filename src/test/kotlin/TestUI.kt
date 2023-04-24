@@ -4,16 +4,14 @@ import com.isyscore.kotlin.swing.UI
 import com.isyscore.kotlin.swing.UIStyle
 import com.isyscore.kotlin.swing.dsl.*
 import com.isyscore.kotlin.swing.runOnMainThread
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.Theme
 import org.junit.Test
 import java.awt.BorderLayout
 import java.awt.BorderLayout.NORTH
 import java.util.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-import org.fife.ui.rsyntaxtextarea.Theme
-import java.awt.Color
-import javax.swing.border.Border
 import kotlin.concurrent.thread
 
 class TestUI {
@@ -140,7 +138,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
 
@@ -188,7 +186,7 @@ class TestUI {
 //            }
             val tbl = table(arrayRowData = arrayOf(arrayOf("A", true), arrayOf("B", false)), arrayColumnNames = arrayOf("Name", "Checked")) {
                 // rowHeight = 50
-                cell<JCheckBox> { cell, value, selected, cellHasFocus, row, col ->
+                cell<JCheckBox> { cell, value, _, _, row, col ->
                     this.isSelected = value as Boolean
                     addActionListener { cell.setEditValue(this.isSelected, row, col) }
                 }
@@ -220,7 +218,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -230,7 +228,7 @@ class TestUI {
         val frame = rootFrame("Sample") {
             contentBorderPanel {
                 button("It's a button", position = BorderLayout.SOUTH) {
-
+                    this.x
                 }
                 scroller {
                     textArea {
@@ -244,7 +242,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -272,7 +270,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -295,7 +293,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -316,7 +314,7 @@ class TestUI {
                     borderPanel {
                         button("Red") {
                             addActionListener {
-                                this@borderPanel.background = Color.red
+                                // this@borderPanel.background = Color.red
                             }
                         }
                     }
@@ -328,7 +326,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -352,14 +350,14 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
 
     @Test
     fun testTheme() {
-        UI.lookAndFeel(UIStyle.Windows)
+        UI.lookAndFeel(UIStyle.Light)
         val frame = rootFrame("Theme") {
             contentBorderPanel {
                 border = BorderFactory.createEmptyBorder(4,4,4,4)
@@ -396,33 +394,29 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
 
     @Test
     fun testCalc() {
-
-
-
         val frame = rootFrame("Calc") {
             contentBorderPanel {
                 horzPanel(position = NORTH) {
-                    val input1 = input {
+                    input {
                         preferredSize = 100 x 30
                     }
                     label("+") {}
-                    val input2 = input {
+                    input {
                         preferredSize = 100 x 30
                     }
-                    lateinit var input3: JTextField
                     button("=") {
                         addActionListener {
 
                         }
                     }
-                    input3 = input {
+                    input {
                         preferredSize = 100 x 30
                         isEditable =  false
                     }
@@ -435,7 +429,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -472,7 +466,7 @@ class TestUI {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }

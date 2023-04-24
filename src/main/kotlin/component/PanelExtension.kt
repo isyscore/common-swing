@@ -1,6 +1,5 @@
 package com.isyscore.kotlin.swing.component
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.GridLayout

@@ -16,7 +16,7 @@ class TestMac {
         UI.lookAndFeel(UIStyle.Dark)
 
         val frame = rootFrame("MyApp") {
-            frameAppearance(true, true)
+            frameAppearance(fullWindow = true, transparentTitleBar = true)
             contentBorderPanel {
 
             }
@@ -46,7 +46,7 @@ class TestMac {
         while (frame.isVisible) {
             try {
                 Thread.sleep(1000)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
 

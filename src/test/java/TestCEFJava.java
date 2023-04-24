@@ -1,4 +1,3 @@
-import com.isyscore.kotlin.swing.component.Browser;
 import me.friwi.jcefmaven.CefAppBuilder;
 import me.friwi.jcefmaven.CefInitializationException;
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter;
@@ -17,7 +16,7 @@ import java.io.IOException;
 
 public class TestCEFJava {
 
-    class MainForm extends JFrame {
+    static class MainForm extends JFrame {
         public MainForm(String title, String url) {
             super(title);
             try {
@@ -49,7 +48,7 @@ public class TestCEFJava {
                 JPanel pnl = new JPanel(new BorderLayout());
                 pnl.add(ui, BorderLayout.CENTER);
                 setContentPane(pnl);
-            } catch (IOException | UnsupportedPlatformException | InterruptedException | CefInitializationException e) {
+            } catch (IOException | UnsupportedPlatformException | InterruptedException | CefInitializationException ignored) {
 
             }
 
@@ -66,7 +65,7 @@ public class TestCEFJava {
         while (form.isVisible()) {
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
         }
     }

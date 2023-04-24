@@ -22,17 +22,7 @@ class EditPopupMenu(comp: JTextComponent): JPopupMenu() {
 class EditKeyListener(private val comp: JTextComponent): KeyListener {
     override fun keyTyped(e: KeyEvent) {}
     override fun keyPressed(e: KeyEvent) {}
-    override fun keyReleased(e: KeyEvent) {
-        val ctrl = if (isMac) e.isMetaDown else e.isControlDown
-        if (ctrl) {
-            when (e.keyCode) {
-                KeyEvent.VK_X -> comp.cut()
-                KeyEvent.VK_C -> comp.copy()
-                KeyEvent.VK_V -> comp.paste()
-                KeyEvent.VK_A -> comp.selectAll()
-            }
-        }
-    }
+    override fun keyReleased(e: KeyEvent) {}
 
 }
 

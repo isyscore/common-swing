@@ -131,7 +131,6 @@ fun JSplitPane.rightWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap:
 fun JSplitPane.topWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = wrapPanel(align, hgap, vgap, JSplitPane.TOP, block)
 fun JSplitPane.bottomWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, block: WrapPanel.() -> Unit): WrapPanel = wrapPanel(align, hgap, vgap, JSplitPane.BOTTOM, block)
 
-
 fun JSplitPane.pager(tabPlacement: Int = JTabbedPane.TOP, tabLayoutPolicy: Int = JTabbedPane.SCROLL_TAB_LAYOUT, position: String = JSplitPane.LEFT, block: JTabbedPane.() -> Unit): JTabbedPane {
     val pager = JTabbedPane(tabPlacement, tabLayoutPolicy).apply(block)
     when(position) {
