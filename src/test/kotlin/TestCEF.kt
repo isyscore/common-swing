@@ -10,6 +10,7 @@ import org.cef.browser.CefMessageRouter
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.CefKeyboardHandlerAdapter
 import org.cef.handler.CefMessageRouterHandlerAdapter
+import org.cef.network.CefRequest
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.JFrame
@@ -136,13 +137,22 @@ class TestCEF {
                 browser {
                     config {
                         settings.windowless_rendering_enabled = false
-                        url = "http://10.30.30.78:38080" // "https://www.baidu.com" // "http://10.30.30.78:38080" //"https://html5test.com"
+                        // url = "http://10.30.30.78:38080" // "https://www.baidu.com" // "http://10.30.30.78:38080" //"https://html5test.com"
+
                         addExitListener {
                             exitProcess(0)
                         }
                         addKeyboardHandler(object: CefKeyboardHandlerAdapter() {})
                         addMessageRouterHandler(JavascriptResponseWaiter(), true)
+
                     }
+                    // http://10.20.5.34:38080/api/vis/preview/projects/1651407245599387650/1590000000000000000.html?token=ffe983fa-9807-46ea-8802-bf6b8e88a37a
+                    val req = CefRequest.create().apply {
+                        this.set("http://10.20.5.34:38080/api/vis/preview/projects/1651407245599387650/1590000000000000000.html",
+                            "GET", null, mapOf("token" to "ffe983fa-9807-46ea-8802-bf6b8e88a37a")
+                        )
+                    }
+                    this.browser.loadRequest(req)
                 }
             }
             size = 1024 x 768

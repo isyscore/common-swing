@@ -5,20 +5,23 @@
 ### 使用
 
 ```groovy
-kotlin_version=1.4.10
+kotlin_version=1.8.20
+java_version=17
 
 dependencies {
-    implementation 'com.github.isyscore:common-swing:1.0.6'
+    implementation 'com.github.isyscore:common-swing:2.0.1.0'
 }
 ```
 
 ### 传递依赖
 
 ```groovy
-api 'com.github.isyscore:common-jvm:1.3.2'
+api 'com.github.isyscore:common-jvm:2.0.1'
 ```
 
-详细信息和用法参考本篇，此处不再赘述 [点击进入](https://mp.weixin.qq.com/s/rHPZBrkQ9JnDZ4fpLyfmRA)
+详细信息和用法参考本篇，此处不再赘述 [点击进入](https://isyscore.yuque.com/um3ee7/dhbg9u/avg941kdg0gkdkep?singleDoc)
+
+### 基本用法
 
 ```kotlin
 class MainForm: JFrame("Main") {
@@ -47,3 +50,7 @@ class MainForm: JFrame("Main") {
 }
 ```
 
+### 详细使用案例
+
+1. 指令集 IIOS HUB 客户端([点击查看](http://10.30.30.3/iios/product-project/hub/hub-native-client))
+2. 完整的组件使用演示([点击查看](http://10.30.30.3/hexj/common-swing-sample))

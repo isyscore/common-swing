@@ -4,6 +4,7 @@ import java.awt.Component
 import java.awt.Container
 import java.awt.Graphics
 import java.awt.Image
+import java.io.StringReader
 import java.net.URL
 import javax.swing.ImageIcon
 

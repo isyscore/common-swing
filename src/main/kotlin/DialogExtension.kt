@@ -4,8 +4,10 @@ package com.isyscore.kotlin.swing
 
 import java.awt.Component
 import java.io.File
+import javax.swing.Icon
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
+import javax.swing.JOptionPane.*
 import javax.swing.filechooser.FileFilter
 import javax.swing.filechooser.FileSystemView
 
@@ -52,3 +54,17 @@ fun Component.questionMessageBox(title: String, msg: String) {
 fun Component.warningMessageBox(title: String, msg: String) {
     JOptionPane.showMessageDialog(this, msg, title, JOptionPane.WARNING_MESSAGE)
 }
+
+/**
+ *  @param optionType YES_NO_OPTION, YES_NO_CANCEL_OPTION, or OK_CANCEL_OPTION
+ *  @param messageType ERROR_MESSAGE, INFORMATION_MESSAGE, WARNING_MESSAGE, QUESTION_MESSAGE, or PLAIN_MESSAGE
+ */
+fun Component.confirmDialog(title: String, msg: String, optionType: Int = OK_CANCEL_OPTION, messageType: Int = PLAIN_MESSAGE, icon: Icon? = null): Int =
+    JOptionPane.showConfirmDialog(this, msg, title, optionType, messageType, icon)
+
+/**
+ * @param optionType DEFAULT_OPTION, YES_NO_OPTION, YES_NO_CANCEL_OPTION, or OK_CANCEL_OPTION
+ * @param messageType ERROR_MESSAGE, INFORMATION_MESSAGE, WARNING_MESSAGE, QUESTION_MESSAGE, or PLAIN_MESSAGE
+ */
+fun Component.optionDialog(title: String, msg: String, optionType: Int = DEFAULT_OPTION, messageType: Int = PLAIN_MESSAGE, icon: Icon? = null, options: Array<String> = arrayOf(), defVal: String = ""): Int =
+    JOptionPane.showOptionDialog(this, msg, title, optionType, messageType, icon, options, defVal)
