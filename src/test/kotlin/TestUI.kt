@@ -2,6 +2,7 @@
 import com.isyscore.kotlin.common.join
 import com.isyscore.kotlin.swing.UI
 import com.isyscore.kotlin.swing.UIStyle
+import com.isyscore.kotlin.swing.component.BorderPanel
 import com.isyscore.kotlin.swing.dsl.*
 import com.isyscore.kotlin.swing.runOnMainThread
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
@@ -365,6 +366,17 @@ class TestUI {
                     leftScroller {
                         list(array = arrayOf("Light", "Dark", "Darcula", "Intellij", "Metal", "Motif", "Windows", "WindowsClassic", "GTK")) {
                             border = BorderFactory.createEmptyBorder(4,4,4,4)
+                            cell<BorderPanel, String> { value, index, selected, cellHasFocus ->
+                                button("Delete", position = BorderLayout.EAST) {
+                                    this.requestFocus(true)
+                                    addActionListener {
+                                        println("Clicked!!!")
+                                    }
+                                }
+                                label(value, position = BorderLayout.CENTER) {
+
+                                }
+                            }
                         }
                     }
                     rightBorderPanel {
