@@ -4,10 +4,13 @@ package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.FlowLayout
-import java.awt.LayoutManager
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory
+import org.apache.batik.swing.JSVGCanvas
+import org.apache.batik.util.XMLResourceDescriptor
+import java.awt.*
+import java.io.File
+import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.util.*
 import javax.swing.*
@@ -271,6 +274,38 @@ fun JMenu.box(axis: Int = 0, block: Box.() -> Unit): Box {
     return box
 }
 
+fun JMenu.image(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon {
+    val icon = when {
+        data != null -> StretchIcon(imageData = data)
+        img != null -> StretchIcon(image = img)
+        filename != null -> StretchIcon(filename = filename)
+        location != null -> StretchIcon(location = location)
+        else -> throw IllegalArgumentException("All image sources are empty.")
+    }.apply(block)
+    val lbl = JLabel(icon, JLabel.CENTER)
+    add(lbl)
+    return icon
+}
+
+fun JMenu.svg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas {
+    val canvas = JSVGCanvas()
+    when{
+        file != null -> canvas.uri = file.toURI().toString()
+        else -> {
+            val parser = XMLResourceDescriptor.getXMLParserClassName()
+            val factory = SAXSVGDocumentFactory(parser)
+            canvas.svgDocument = when{
+                uri != null -> factory.createSVGDocument(uri.toString())
+                inputStream != null -> factory.createSVGDocument("", inputStream)
+                else -> throw IllegalArgumentException("All image sources are empty.")
+            }
+        }
+    }
+    canvas.apply(block)
+    add(canvas)
+    return canvas
+}
+
 inline fun<reified T: Component> JMenu.custom(vararg params: Any, block: T.() -> Unit): T {
     val comp = newClassInstance<T>(*params).apply(block)
     add(comp)
@@ -515,6 +550,44 @@ fun JPopupMenu.slider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max: 
     val sl = JSlider(orientation, min, max, value).apply(block)
     add(sl)
     return sl
+}
+
+fun JPopupMenu.box(axis: Int = 0, block: Box.() -> Unit): Box {
+    val box = Box(axis).apply(block)
+    add(box)
+    return box
+}
+
+fun JPopupMenu.image(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon {
+    val icon = when {
+        data != null -> StretchIcon(imageData = data)
+        img != null -> StretchIcon(image = img)
+        filename != null -> StretchIcon(filename = filename)
+        location != null -> StretchIcon(location = location)
+        else -> throw IllegalArgumentException("All image sources are empty.")
+    }.apply(block)
+    val lbl = JLabel(icon, JLabel.CENTER)
+    add(lbl)
+    return icon
+}
+
+fun JPopupMenu.svg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas {
+    val canvas = JSVGCanvas()
+    when{
+        file != null -> canvas.uri = file.toURI().toString()
+        else -> {
+            val parser = XMLResourceDescriptor.getXMLParserClassName()
+            val factory = SAXSVGDocumentFactory(parser)
+            canvas.svgDocument = when{
+                uri != null -> factory.createSVGDocument(uri.toString())
+                inputStream != null -> factory.createSVGDocument("", inputStream)
+                else -> throw IllegalArgumentException("All image sources are empty.")
+            }
+        }
+    }
+    canvas.apply(block)
+    add(canvas)
+    return canvas
 }
 
 inline fun<reified T: Component> JPopupMenu.custom(vararg params: Any, block: T.() -> Unit): T {

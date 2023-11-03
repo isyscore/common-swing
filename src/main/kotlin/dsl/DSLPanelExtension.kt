@@ -4,10 +4,13 @@ package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.FlowLayout
-import java.awt.LayoutManager
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory
+import org.apache.batik.swing.JSVGCanvas
+import org.apache.batik.util.XMLResourceDescriptor
+import java.awt.*
+import java.io.File
+import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.util.*
 import javax.swing.*
@@ -264,6 +267,38 @@ fun JPanel.box(axis: Int = 0, position: String? = null, block: Box.() -> Unit): 
     val box = Box(axis).apply(block)
     if (position != null) add(box, position) else add(box)
     return box
+}
+
+fun JPanel.image(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, position: String? = null, block: StretchIcon.() -> Unit): StretchIcon {
+    val icon = when {
+        data != null -> StretchIcon(imageData = data)
+        img != null -> StretchIcon(image = img)
+        filename != null -> StretchIcon(filename = filename)
+        location != null -> StretchIcon(location = location)
+        else -> throw IllegalArgumentException("All image sources are empty.")
+    }.apply(block)
+    val lbl = JLabel(icon, JLabel.CENTER)
+    if (position != null) add(lbl, position) else add(lbl)
+    return icon
+}
+
+fun JPanel.svg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, position: String? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas {
+    val canvas = JSVGCanvas()
+    when{
+        file != null -> canvas.uri = file.toURI().toString()
+        else -> {
+            val parser = XMLResourceDescriptor.getXMLParserClassName()
+            val factory = SAXSVGDocumentFactory(parser)
+            canvas.svgDocument = when{
+                uri != null -> factory.createSVGDocument(uri.toString())
+                inputStream != null -> factory.createSVGDocument("", inputStream)
+                else -> throw IllegalArgumentException("All image sources are empty.")
+            }
+        }
+    }
+    canvas.apply(block)
+    if (position != null) add(canvas, position) else add(canvas)
+    return canvas
 }
 
 inline fun<reified T: Component> JPanel.custom(position: String? = null, vararg params: Any, block: T.() -> Unit): T {

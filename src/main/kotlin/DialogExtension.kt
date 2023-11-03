@@ -18,17 +18,21 @@ fun Component.showFileDialog(filters: Array<FileFilter>, isSave: Boolean = false
     val retVal = if (isSave) showSaveDialog(this) else showOpenDialog(this)
     if (retVal == JFileChooser.APPROVE_OPTION) {
         val f = selectedFile
-        callback(f)
+        if (f != null) {
+            callback(f)
+        }
     }
 }
 
 fun Component.showDirectoryDialog(defaultDir: String? = null, callback: (File) -> Unit) = JFileChooser().apply {
     currentDirectory = if (defaultDir == null) FileSystemView.getFileSystemView().homeDirectory else File(defaultDir)
     fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-    showOpenDialog(this)
-    val f = selectedFile
-    if (f != null) {
-        callback(f)
+    val retVal = showOpenDialog(this)
+    if (retVal == JFileChooser.APPROVE_OPTION) {
+        val f = selectedFile
+        if (f != null) {
+            callback(f)
+        }
     }
 }
 

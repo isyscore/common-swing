@@ -27,6 +27,7 @@ dependencies {
     api 'me.friwi:jcefmaven:110.0.25'
     api 'com.formdev:flatlaf:3.0'
     api 'com.jtattoo:JTattoo:1.6.13'
+    api 'org.apache.xmlgraphics:batik-swing:1.17'
     testImplementation 'com.fifesoft:rsyntaxtextarea:3.3.2'
     testImplementation "junit:junit:4.13.2"
 }

@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder
 @ContextDsl
 fun rootPager(tabPlacement: Int = JTabbedPane.TOP, tabLayoutPolicy: Int = JTabbedPane.SCROLL_TAB_LAYOUT, block: JTabbedPane.() -> Unit): JTabbedPane = JTabbedPane(tabPlacement, tabLayoutPolicy).apply(block)
 
-fun JTabbedPane.addTabWithClose(title: String? = null, icon: Icon? = null, comp: Component) {
+fun JTabbedPane.addTabWithClose(title: String? = null, icon: Icon? = null, comp: Component, closeIcon: Icon? = null, onQueryClose: ((Component) -> Boolean)? = null, onAfterClose: (() -> Unit)? = null) {
     fun makeClosePane(title: String?, comp: Component): BorderPanel = rootBorderPanel {
         border = EmptyBorder(0, 0, 0, 0)
         isOpaque = false
@@ -19,13 +19,19 @@ fun JTabbedPane.addTabWithClose(title: String? = null, icon: Icon? = null, comp:
             isOpaque = false
             label(position = BorderLayout.NORTH) { isOpaque = false; preferredSize = Dimension(16, 4) }
             label(position = BorderLayout.SOUTH) { isOpaque = false; preferredSize = Dimension(16, 4) }
-            button(title = "x", position = BorderLayout.CENTER) {
+            button(title = if (closeIcon == null) "x" else null, icon = closeIcon, position = BorderLayout.CENTER) {
                 isFocusPainted = false
                 margin = Insets(0, 0, 0, 0)
                 size { 16 x 16 }
                 putClientProperty("JButton.buttonType", "square")
                 addActionListener {
-                    this@addTabWithClose.remove(this@addTabWithClose.indexOfComponent(comp))
+                    val doClose = if (onQueryClose != null) {
+                        onQueryClose(comp)
+                    } else true
+                    if (doClose) {
+                        this@addTabWithClose.remove(this@addTabWithClose.indexOfComponent(comp))
+                        onAfterClose?.invoke()
+                    }
                 }
             }
         }
@@ -68,7 +74,7 @@ fun JTabbedPane.horzPanelTab(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap
     return pnl
 }
 
-fun JTabbedPane.gridPanelTab(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0,  title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: GridPanel.() -> Unit): GridPanel {
+fun JTabbedPane.gridPanelTab(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, title: String? = null, icon: Icon? = null, canClose: Boolean = false, block: GridPanel.() -> Unit): GridPanel {
     val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
     if (canClose) addTabWithClose(title, icon, pnl) else addTab(title, icon, pnl)
     return pnl
@@ -110,13 +116,13 @@ fun JTabbedPane.layerTab(title: String? = null, icon: Icon? = null, canClose: Bo
     return lay
 }
 
-inline fun<reified T: Component> JTabbedPane.customTab(title: String? = null, icon: Icon? = null, canClose: Boolean = false, vararg params: Any, block: T.() -> Unit): T {
+inline fun <reified T : Component> JTabbedPane.customTab(title: String? = null, icon: Icon? = null, canClose: Boolean = false, vararg params: Any, block: T.() -> Unit): T {
     val lay = newClassInstance<T>(*params).apply(block)
     if (canClose) addTabWithClose(title, icon, lay) else addTab(title, icon, lay)
     return lay
 }
 
-fun<T: Component> JTabbedPane.compTab(title: String?, icon: Icon? = null, canClose: Boolean = false, comp: T, block: T.() -> Unit): T {
+fun <T : Component> JTabbedPane.compTab(title: String?, icon: Icon? = null, canClose: Boolean = false, comp: T, block: T.() -> Unit): T {
     comp.apply(block)
     if (canClose) addTabWithClose(title, icon, comp) else addTab(title, icon, comp)
     return comp

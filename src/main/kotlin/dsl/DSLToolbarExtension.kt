@@ -4,10 +4,13 @@ package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.FlowLayout
-import java.awt.LayoutManager
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory
+import org.apache.batik.swing.JSVGCanvas
+import org.apache.batik.util.XMLResourceDescriptor
+import java.awt.*
+import java.io.File
+import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.util.*
 import javax.swing.*
@@ -184,10 +187,15 @@ fun <T> JToolBar.list(model: ListModel<T>? = null, array: Array<T>? = null, vect
 }
 
 fun JToolBar.table(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable {
     val table = when {
@@ -202,8 +210,7 @@ fun JToolBar.table(
 }
 
 fun JToolBar.tree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, block: JTree.() -> Unit
 ): JTree {
     val tree = when {
         model != null -> JTree(model)
@@ -247,13 +254,45 @@ fun JToolBar.box(axis: Int = 0, block: Box.() -> Unit): Box {
     return box
 }
 
-inline fun<reified T: Component> JToolBar.custom(vararg params: Any, block: T.() -> Unit): T {
+fun JToolBar.image(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon {
+    val icon = when {
+        data != null -> StretchIcon(imageData = data)
+        img != null -> StretchIcon(image = img)
+        filename != null -> StretchIcon(filename = filename)
+        location != null -> StretchIcon(location = location)
+        else -> throw IllegalArgumentException("All image sources are empty.")
+    }.apply(block)
+    val lbl = JLabel(icon, JLabel.CENTER)
+    add(lbl)
+    return icon
+}
+
+fun JToolBar.svg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas {
+    val canvas = JSVGCanvas()
+    when {
+        file != null -> canvas.uri = file.toURI().toString()
+        else -> {
+            val parser = XMLResourceDescriptor.getXMLParserClassName()
+            val factory = SAXSVGDocumentFactory(parser)
+            canvas.svgDocument = when {
+                uri != null -> factory.createSVGDocument(uri.toString())
+                inputStream != null -> factory.createSVGDocument("", inputStream)
+                else -> throw IllegalArgumentException("All image sources are empty.")
+            }
+        }
+    }
+    canvas.apply(block)
+    add(canvas)
+    return canvas
+}
+
+inline fun <reified T : Component> JToolBar.custom(vararg params: Any, block: T.() -> Unit): T {
     val comp = newClassInstance<T>(*params).apply(block)
     add(comp)
     return comp
 }
 
-fun <T: Component> JToolBar.comp(comp: T, block: T.() -> Unit): T {
+fun <T : Component> JToolBar.comp(comp: T, block: T.() -> Unit): T {
     comp.apply(block)
     add(comp)
     return comp

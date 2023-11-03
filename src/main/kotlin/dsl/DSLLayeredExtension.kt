@@ -4,10 +4,17 @@ package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.*
 import com.isyscore.kotlin.swing.inline.newClassInstance
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory
+import org.apache.batik.swing.JSVGCanvas
+import org.apache.batik.util.XMLResourceDescriptor
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.FlowLayout
+import java.awt.Image
 import java.awt.LayoutManager
+import java.io.File
+import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.util.*
 import javax.swing.*
@@ -184,11 +191,18 @@ fun <T> JLayeredPane.list(model: ListModel<T>? = null, array: Array<T>? = null, 
 }
 
 fun JLayeredPane.table(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
-    layer: Int = 0, position: Int = 0, block: JTable.() -> Unit
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
+    layer: Int = 0,
+    position: Int = 0,
+    block: JTable.() -> Unit
 ): JTable {
     val table = when {
         model != null -> JTable(model, columnModel, selectionModel)
@@ -202,8 +216,7 @@ fun JLayeredPane.table(
 }
 
 fun JLayeredPane.tree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    layer: Int = 0, position: Int = 0, block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, layer: Int = 0, position: Int = 0, block: JTree.() -> Unit
 ): JTree {
     val tree = when {
         model != null -> JTree(model)
@@ -247,13 +260,45 @@ fun JLayeredPane.box(axis: Int = 0, layer: Int = 0, position: Int = 0, block: Bo
     return box
 }
 
-inline fun<reified T: Component> JLayeredPane.custom(layer: Int = 0, position: Int = 0, vararg params: Any, block: T.() -> Unit): T {
+fun JLayeredPane.image(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, layer: Int = 0, position: Int = 0, block: StretchIcon.() -> Unit): StretchIcon {
+    val icon = when {
+        data != null -> StretchIcon(imageData = data)
+        img != null -> StretchIcon(image = img)
+        filename != null -> StretchIcon(filename = filename)
+        location != null -> StretchIcon(location = location)
+        else -> throw IllegalArgumentException("All image sources are empty.")
+    }.apply(block)
+    val lbl = JLabel(icon, JLabel.CENTER)
+    add(lbl, layer, position)
+    return icon
+}
+
+fun JLayeredPane.svg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, layer: Int = 0, position: Int = 0, block: JSVGCanvas.() -> Unit): JSVGCanvas {
+    val canvas = JSVGCanvas()
+    when{
+        file != null -> canvas.uri = file.toURI().toString()
+        else -> {
+            val parser = XMLResourceDescriptor.getXMLParserClassName()
+            val factory = SAXSVGDocumentFactory(parser)
+            canvas.svgDocument = when{
+                uri != null -> factory.createSVGDocument(uri.toString())
+                inputStream != null -> factory.createSVGDocument("", inputStream)
+                else -> throw IllegalArgumentException("All image sources are empty.")
+            }
+        }
+    }
+    canvas.apply(block)
+    add(canvas, layer, position)
+    return canvas
+}
+
+inline fun <reified T : Component> JLayeredPane.custom(layer: Int = 0, position: Int = 0, vararg params: Any, block: T.() -> Unit): T {
     val comp = newClassInstance<T>(*params).apply(block)
     add(comp, layer, position)
     return comp
 }
 
-fun<T: Component> JLayeredPane.comp(layer: Int = 0, position: Int = 0, comp: T, block: T.() -> Unit): T {
+fun <T : Component> JLayeredPane.comp(layer: Int = 0, position: Int = 0, comp: T, block: T.() -> Unit): T {
     comp.apply(block)
     add(comp, layer, position)
     return comp

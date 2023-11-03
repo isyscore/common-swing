@@ -3,10 +3,13 @@
 package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.*
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.FlowLayout
-import java.awt.LayoutManager
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory
+import org.apache.batik.swing.JSVGCanvas
+import org.apache.batik.util.XMLResourceDescriptor
+import java.awt.*
+import java.io.File
+import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.util.*
 import javax.swing.*
@@ -19,7 +22,7 @@ fun rootSplitPane(orientation: Int = JSplitPane.HORIZONTAL_SPLIT, block: JSplitP
 
 fun JSplitPane.panel(layout: LayoutManager? = BorderLayout(), position: String = JSplitPane.LEFT, block: JPanel.() -> Unit): JPanel {
     val pnl = JPanel(layout).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -35,7 +38,7 @@ fun JSplitPane.bottomPanel(layout: LayoutManager? = BorderLayout(), block: JPane
 
 fun JSplitPane.borderPanel(hgap: Int = 0, vgap: Int = 0, position: String = JSplitPane.LEFT, block: BorderPanel.() -> Unit): BorderPanel {
     val pnl = BorderPanel(hgap, vgap).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -51,7 +54,7 @@ fun JSplitPane.bottomBorderPanel(hgap: Int = 0, vgap: Int = 0, block: BorderPane
 
 fun JSplitPane.clearPanel(position: String = JSplitPane.LEFT, block: ClearPanel.() -> Unit): ClearPanel {
     val pnl = ClearPanel().apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -67,7 +70,7 @@ fun JSplitPane.bottomClearPanel(block: ClearPanel.() -> Unit): ClearPanel = clea
 
 fun JSplitPane.vertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, position: String = JSplitPane.LEFT, block: VertPanel.() -> Unit): VertPanel {
     val pnl = VertPanel(align, hgap, vgap, hfill, vfill).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -77,14 +80,14 @@ fun JSplitPane.vertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: I
 }
 
 fun JSplitPane.leftVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill, JSplitPane.LEFT, block)
-fun JSplitPane.rightVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill,JSplitPane.RIGHT, block)
-fun JSplitPane.topVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill,JSplitPane.TOP, block)
-fun JSplitPane.bottomVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill,JSplitPane.BOTTOM, block)
+fun JSplitPane.rightVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill, JSplitPane.RIGHT, block)
+fun JSplitPane.topVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill, JSplitPane.TOP, block)
+fun JSplitPane.bottomVertPanel(align: Int = VertFlowLayout.TOP, hgap: Int = 4, vgap: Int = 4, hfill: Boolean = true, vfill: Boolean = false, block: VertPanel.() -> Unit): VertPanel = vertPanel(align, hgap, vgap, hfill, vfill, JSplitPane.BOTTOM, block)
 
 
 fun JSplitPane.horzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vgap: Int = 5, position: String = JSplitPane.LEFT, block: HorzPanel.() -> Unit): HorzPanel {
     val pnl = HorzPanel(align, hgap, vgap).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -100,7 +103,7 @@ fun JSplitPane.bottomHorzPanel(align: Int = FlowLayout.CENTER, hgap: Int = 5, vg
 
 fun JSplitPane.gridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 0, position: String = JSplitPane.LEFT, block: GridPanel.() -> Unit): GridPanel {
     val pnl = GridPanel(rows, cols, hgap, vgap).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -117,7 +120,7 @@ fun JSplitPane.bottomGridPanel(rows: Int, cols: Int, hgap: Int = 0, vgap: Int = 
 
 fun JSplitPane.wrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap: Int = 5, position: String = JSplitPane.LEFT, block: WrapPanel.() -> Unit): WrapPanel {
     val pnl = WrapPanel(align, hgap, vgap).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pnl
         JSplitPane.RIGHT -> rightComponent = pnl
         JSplitPane.TOP -> topComponent = pnl
@@ -133,7 +136,7 @@ fun JSplitPane.bottomWrapPanel(align: Int = FlowLayout.LEFT, hgap: Int = 5, vgap
 
 fun JSplitPane.pager(tabPlacement: Int = JTabbedPane.TOP, tabLayoutPolicy: Int = JTabbedPane.SCROLL_TAB_LAYOUT, position: String = JSplitPane.LEFT, block: JTabbedPane.() -> Unit): JTabbedPane {
     val pager = JTabbedPane(tabPlacement, tabLayoutPolicy).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = pager
         JSplitPane.RIGHT -> rightComponent = pager
         JSplitPane.TOP -> topComponent = pager
@@ -149,7 +152,7 @@ fun JSplitPane.bottomPager(tabPlacement: Int = JTabbedPane.TOP, tabLayoutPolicy:
 
 fun JSplitPane.scroller(vsbPolicy: Int = JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, hsbPolicy: Int = JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED, position: String = JSplitPane.LEFT, block: JScrollPane.() -> Unit): JScrollPane {
     val scroll = JScrollPane(vsbPolicy, hsbPolicy).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = scroll
         JSplitPane.RIGHT -> rightComponent = scroll
         JSplitPane.TOP -> topComponent = scroll
@@ -165,7 +168,7 @@ fun JSplitPane.bottomScroller(vsbPolicy: Int = JScrollPane.VERTICAL_SCROLLBAR_AS
 
 fun JSplitPane.split(orientation: Int = JSplitPane.HORIZONTAL_SPLIT, position: String = JSplitPane.LEFT, block: JSplitPane.() -> Unit): JSplitPane {
     val sp = JSplitPane(orientation).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = sp
         JSplitPane.RIGHT -> rightComponent = sp
         JSplitPane.TOP -> topComponent = sp
@@ -181,7 +184,7 @@ fun JSplitPane.bottomSplit(orientation: Int = JSplitPane.HORIZONTAL_SPLIT, block
 
 fun JSplitPane.toolbar(orientation: Int = JToolBar.HORIZONTAL, position: String = JSplitPane.LEFT, block: JToolBar.() -> Unit): JToolBar {
     val tb = JToolBar(orientation).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = tb
         JSplitPane.RIGHT -> rightComponent = tb
         JSplitPane.TOP -> topComponent = tb
@@ -197,7 +200,7 @@ fun JSplitPane.bottomToolbar(orientation: Int = JToolBar.HORIZONTAL, block: JToo
 
 fun JSplitPane.layer(position: String = JSplitPane.LEFT, block: JLayeredPane.() -> Unit): JLayeredPane {
     val lay = JLayeredPane().apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = lay
         JSplitPane.RIGHT -> rightComponent = lay
         JSplitPane.TOP -> topComponent = lay
@@ -213,7 +216,7 @@ fun JSplitPane.bottomLayer(block: JLayeredPane.() -> Unit): JLayeredPane = layer
 
 fun JSplitPane.label(title: String? = null, icon: Icon? = null, horizontalAlignment: Int = JLabel.LEFT, position: String = JSplitPane.LEFT, block: JLabel.() -> Unit): JLabel {
     val lbl = JLabel(title, icon, horizontalAlignment).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = lbl
         JSplitPane.RIGHT -> rightComponent = lbl
         JSplitPane.TOP -> topComponent = lbl
@@ -229,7 +232,7 @@ fun JSplitPane.bottomLabel(title: String? = null, icon: Icon? = null, horizontal
 
 fun JSplitPane.input(text: String? = null, column: Int = 0, position: String = JSplitPane.LEFT, block: KTextField.() -> Unit): KTextField {
     val txt = KTextField(text, column).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = txt
         JSplitPane.RIGHT -> rightComponent = txt
         JSplitPane.TOP -> topComponent = txt
@@ -250,7 +253,7 @@ fun <T> JSplitPane.combobox(model: ComboBoxModel<T>? = null, array: Array<T>? = 
         vector != null -> JComboBox(vector)
         else -> JComboBox()
     }.apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = cb
         JSplitPane.RIGHT -> rightComponent = cb
         JSplitPane.TOP -> topComponent = cb
@@ -266,7 +269,7 @@ fun <T> JSplitPane.bottomCombobox(model: ComboBoxModel<T>? = null, array: Array<
 
 fun JSplitPane.button(title: String? = null, icon: Icon? = null, position: String = JSplitPane.LEFT, block: JButton.() -> Unit): JButton {
     val b = JButton(title, icon).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = b
         JSplitPane.RIGHT -> rightComponent = b
         JSplitPane.TOP -> topComponent = b
@@ -282,7 +285,7 @@ fun JSplitPane.bottomButton(title: String? = null, icon: Icon? = null, block: JB
 
 fun JSplitPane.checkbox(title: String? = null, icon: Icon? = null, selected: Boolean = false, position: String = JSplitPane.LEFT, block: JCheckBox.() -> Unit): JCheckBox {
     val chk = JCheckBox(title, icon, selected).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = chk
         JSplitPane.RIGHT -> rightComponent = chk
         JSplitPane.TOP -> topComponent = chk
@@ -298,7 +301,7 @@ fun JSplitPane.bottomCheckbox(title: String? = null, icon: Icon? = null, selecte
 
 fun JSplitPane.radio(title: String? = null, icon: Icon? = null, selected: Boolean = false, position: String = JSplitPane.LEFT, block: JRadioButton.() -> Unit): JRadioButton {
     val rd = JRadioButton(title, icon, selected).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = rd
         JSplitPane.RIGHT -> rightComponent = rd
         JSplitPane.TOP -> topComponent = rd
@@ -314,7 +317,7 @@ fun JSplitPane.bottomRadio(title: String? = null, icon: Icon? = null, selected: 
 
 fun JSplitPane.toggle(title: String? = null, icon: Icon? = null, selected: Boolean = false, position: String = JSplitPane.LEFT, block: JToggleButton.() -> Unit): JToggleButton {
     val tg = JToggleButton(title, icon, selected).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = tg
         JSplitPane.RIGHT -> rightComponent = tg
         JSplitPane.TOP -> topComponent = tg
@@ -330,7 +333,7 @@ fun JSplitPane.bottomToggle(title: String? = null, icon: Icon? = null, selected:
 
 fun JSplitPane.textArea(text: String? = null, rows: Int = 0, columns: Int = 0, position: String = JSplitPane.LEFT, block: KTextArea.() -> Unit): KTextArea {
     val ta = KTextArea(text, rows, columns).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = ta
         JSplitPane.RIGHT -> rightComponent = ta
         JSplitPane.TOP -> topComponent = ta
@@ -346,7 +349,7 @@ fun JSplitPane.bottomTextArea(text: String? = null, rows: Int = 0, columns: Int 
 
 fun JSplitPane.inputPassword(text: String? = null, column: Int = 0, position: String = JSplitPane.LEFT, block: KPasswordField.() -> Unit): KPasswordField {
     val txt = KPasswordField(text, column).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = txt
         JSplitPane.RIGHT -> rightComponent = txt
         JSplitPane.TOP -> topComponent = txt
@@ -362,7 +365,7 @@ fun JSplitPane.bottomInputPassword(text: String? = null, column: Int = 0, block:
 
 fun JSplitPane.textPane(position: String = JSplitPane.LEFT, block: KTextPane.() -> Unit): KTextPane {
     val txt = KTextPane().apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = txt
         JSplitPane.RIGHT -> rightComponent = txt
         JSplitPane.TOP -> topComponent = txt
@@ -382,7 +385,7 @@ fun JSplitPane.editorPane(contentType: String? = null, text: String? = null, url
         contentType != null -> KEditorPane(contentType, text)
         else -> KEditorPane()
     }.apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = txt
         JSplitPane.RIGHT -> rightComponent = txt
         JSplitPane.TOP -> topComponent = txt
@@ -398,7 +401,7 @@ fun JSplitPane.bottomEditorPane(contentType: String? = null, text: String? = nul
 
 fun JSplitPane.spinner(model: SpinnerModel? = null, position: String = JSplitPane.LEFT, block: JSpinner.() -> Unit): JSpinner {
     val sp = (if (model == null) JSpinner() else JSpinner(model)).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = sp
         JSplitPane.RIGHT -> rightComponent = sp
         JSplitPane.TOP -> topComponent = sp
@@ -419,7 +422,7 @@ fun <T> JSplitPane.list(model: ListModel<T>? = null, array: Array<T>? = null, ve
         vector != null -> JList(vector)
         else -> JList()
     }.apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = list
         JSplitPane.RIGHT -> rightComponent = list
         JSplitPane.TOP -> topComponent = list
@@ -434,11 +437,17 @@ fun <T> JSplitPane.topList(model: ListModel<T>? = null, array: Array<T>? = null,
 fun <T> JSplitPane.bottomList(model: ListModel<T>? = null, array: Array<T>? = null, vector: Vector<T>? = null, block: JList<T>.() -> Unit): JList<T> = list(model, array, vector, JSplitPane.BOTTOM, block)
 
 fun JSplitPane.table(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
-    position: String = JSplitPane.LEFT, block: JTable.() -> Unit
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
+    position: String = JSplitPane.LEFT,
+    block: JTable.() -> Unit
 ): JTable {
     val table = when {
         model != null -> JTable(model, columnModel, selectionModel)
@@ -447,7 +456,7 @@ fun JSplitPane.table(
         arrayRowData != null && arrayColumnNames != null -> JTable(arrayRowData, arrayColumnNames)
         else -> JTable()
     }.apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = table
         JSplitPane.RIGHT -> rightComponent = table
         JSplitPane.TOP -> topComponent = table
@@ -457,37 +466,59 @@ fun JSplitPane.table(
 }
 
 fun JSplitPane.leftTable(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable = table(model, columnModel, selectionModel, rows, cols, vecRowData, vecColumnNames, arrayRowData, arrayColumnNames, JSplitPane.LEFT, block)
+
 fun JSplitPane.rightTable(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable = table(model, columnModel, selectionModel, rows, cols, vecRowData, vecColumnNames, arrayRowData, arrayColumnNames, JSplitPane.RIGHT, block)
+
 fun JSplitPane.topTable(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable = table(model, columnModel, selectionModel, rows, cols, vecRowData, vecColumnNames, arrayRowData, arrayColumnNames, JSplitPane.TOP, block)
+
 fun JSplitPane.bottomTable(
-    model: TableModel? = null, columnModel: TableColumnModel? = null, selectionModel: ListSelectionModel? = null,
-    rows: Int = -1, cols: Int = -1,
-    vecRowData: Vector<out Vector<*>>? = null, vecColumnNames: Vector<*>? = null,
-    arrayRowData: Array<Array<*>>? = null, arrayColumnNames: Array<*>? = null,
+    model: TableModel? = null,
+    columnModel: TableColumnModel? = null,
+    selectionModel: ListSelectionModel? = null,
+    rows: Int = -1,
+    cols: Int = -1,
+    vecRowData: Vector<out Vector<*>>? = null,
+    vecColumnNames: Vector<*>? = null,
+    arrayRowData: Array<Array<*>>? = null,
+    arrayColumnNames: Array<*>? = null,
     block: JTable.() -> Unit
 ): JTable = table(model, columnModel, selectionModel, rows, cols, vecRowData, vecColumnNames, arrayRowData, arrayColumnNames, JSplitPane.BOTTOM, block)
 
 fun JSplitPane.tree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    position: String = JSplitPane.LEFT, block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, position: String = JSplitPane.LEFT, block: JTree.() -> Unit
 ): JTree {
     val tree = when {
         model != null -> JTree(model)
@@ -497,7 +528,7 @@ fun JSplitPane.tree(
         hashtable != null -> JTree(hashtable)
         else -> JTree()
     }.apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = tree
         JSplitPane.RIGHT -> rightComponent = tree
         JSplitPane.TOP -> topComponent = tree
@@ -507,25 +538,24 @@ fun JSplitPane.tree(
 }
 
 fun JSplitPane.leftTree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, block: JTree.() -> Unit
 ): JTree = tree(model, node, array, vector, hashtable, JSplitPane.LEFT, block)
+
 fun JSplitPane.rightTree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, block: JTree.() -> Unit
 ): JTree = tree(model, node, array, vector, hashtable, JSplitPane.RIGHT, block)
+
 fun JSplitPane.topTree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, block: JTree.() -> Unit
 ): JTree = tree(model, node, array, vector, hashtable, JSplitPane.TOP, block)
+
 fun JSplitPane.bottomTree(
-    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null,
-    block: JTree.() -> Unit
+    model: TreeModel? = null, node: TreeNode? = null, array: Array<*>? = null, vector: Vector<*>? = null, hashtable: Hashtable<*, *>? = null, block: JTree.() -> Unit
 ): JTree = tree(model, node, array, vector, hashtable, JSplitPane.BOTTOM, block)
 
 fun JSplitPane.progress(orient: Int = JProgressBar.HORIZONTAL, min: Int = 0, max: Int = 100, position: String = JSplitPane.LEFT, block: JProgressBar.() -> Unit): JProgressBar {
     val p = JProgressBar(orient, min, max).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = p
         JSplitPane.RIGHT -> rightComponent = p
         JSplitPane.TOP -> topComponent = p
@@ -541,7 +571,7 @@ fun JSplitPane.bottomProgress(orient: Int = JProgressBar.HORIZONTAL, min: Int = 
 
 fun JSplitPane.scrollbar(orientation: Int = JScrollBar.VERTICAL, value: Int = 0, extent: Int = 10, min: Int = 0, max: Int = 100, position: String = JSplitPane.LEFT, block: JScrollBar.() -> Unit): JScrollBar {
     val sb = JScrollBar(orientation, value, extent, min, max).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = sb
         JSplitPane.RIGHT -> rightComponent = sb
         JSplitPane.TOP -> topComponent = sb
@@ -557,7 +587,7 @@ fun JSplitPane.bottomScrollbar(orientation: Int = JScrollBar.VERTICAL, value: In
 
 fun JSplitPane.separator(orientation: Int = JSeparator.HORIZONTAL, position: String = JSplitPane.LEFT, block: JSeparator.() -> Unit): JSeparator {
     val sp = JSeparator(orientation).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = sp
         JSplitPane.RIGHT -> rightComponent = sp
         JSplitPane.TOP -> topComponent = sp
@@ -573,7 +603,7 @@ fun JSplitPane.bottomSeparator(orientation: Int = JSeparator.HORIZONTAL, block: 
 
 fun JSplitPane.slider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0, max: Int = 100, value: Int = 0, position: String = JSplitPane.LEFT, block: JSlider.() -> Unit): JSlider {
     val sl = JSlider(orientation, min, max, value).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = sl
         JSplitPane.RIGHT -> rightComponent = sl
         JSplitPane.TOP -> topComponent = sl
@@ -589,7 +619,7 @@ fun JSplitPane.bottomSlider(orientation: Int = JSlider.HORIZONTAL, min: Int = 0,
 
 fun JSplitPane.box(axis: Int = 0, position: String = JSplitPane.LEFT, block: Box.() -> Unit): Box {
     val box = Box(axis).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = box
         JSplitPane.RIGHT -> rightComponent = box
         JSplitPane.TOP -> topComponent = box
@@ -603,10 +633,61 @@ fun JSplitPane.rightBox(axis: Int = 0, block: Box.() -> Unit): Box = box(axis, J
 fun JSplitPane.topBox(axis: Int = 0, block: Box.() -> Unit): Box = box(axis, JSplitPane.TOP, block)
 fun JSplitPane.bottomBox(axis: Int = 0, block: Box.() -> Unit): Box = box(axis, JSplitPane.BOTTOM, block)
 
+fun JSplitPane.image(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, position: String = JSplitPane.LEFT, block: StretchIcon.() -> Unit): StretchIcon {
+    val icon = when {
+        data != null -> StretchIcon(imageData = data)
+        img != null -> StretchIcon(image = img)
+        filename != null -> StretchIcon(filename = filename)
+        location != null -> StretchIcon(location = location)
+        else -> throw IllegalArgumentException("All image sources are empty.")
+    }.apply(block)
+    val lbl = JLabel(icon, JLabel.CENTER)
+    when (position) {
+        JSplitPane.LEFT -> leftComponent = lbl
+        JSplitPane.RIGHT -> rightComponent = lbl
+        JSplitPane.TOP -> topComponent = lbl
+        JSplitPane.BOTTOM -> bottomComponent = lbl
+    }
+    return icon
+}
 
-inline fun<reified T: Component> JSplitPane.custom(position: String = JSplitPane.LEFT, vararg params: Any, block: T.() -> Unit): T {
+fun JSplitPane.leftImage(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon = image(data, img, filename, location, JSplitPane.LEFT, block)
+fun JSplitPane.rightImage(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon = image(data, img, filename, location, JSplitPane.RIGHT, block)
+fun JSplitPane.topImage(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon = image(data, img, filename, location, JSplitPane.TOP, block)
+fun JSplitPane.bottomImage(data: ByteArray? = null, img: Image? = null, filename: String? = null, location: URL? = null, block: StretchIcon.() -> Unit): StretchIcon = image(data, img, filename, location, JSplitPane.BOTTOM, block)
+
+fun JSplitPane.svg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, position: String = JSplitPane.LEFT, block: JSVGCanvas.() -> Unit): JSVGCanvas {
+    val canvas = JSVGCanvas()
+    when {
+        file != null -> canvas.uri = file.toURI().toString()
+        else -> {
+            val parser = XMLResourceDescriptor.getXMLParserClassName()
+            val factory = SAXSVGDocumentFactory(parser)
+            canvas.svgDocument = when {
+                uri != null -> factory.createSVGDocument(uri.toString())
+                inputStream != null -> factory.createSVGDocument("", inputStream)
+                else -> throw IllegalArgumentException("All image sources are empty.")
+            }
+        }
+    }
+    canvas.apply(block)
+    when (position) {
+        JSplitPane.LEFT -> leftComponent = canvas
+        JSplitPane.RIGHT -> rightComponent = canvas
+        JSplitPane.TOP -> topComponent = canvas
+        JSplitPane.BOTTOM -> bottomComponent = canvas
+    }
+    return canvas
+}
+
+fun JSplitPane.leftSvg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas = svg(uri, file, inputStream, JSplitPane.LEFT, block)
+fun JSplitPane.rightSvg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas = svg(uri, file, inputStream, JSplitPane.RIGHT, block)
+fun JSplitPane.topSvg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas = svg(uri, file, inputStream, JSplitPane.TOP, block)
+fun JSplitPane.bottomSvg(uri: URI? = null, file: File? = null, inputStream: InputStream? = null, block: JSVGCanvas.() -> Unit): JSVGCanvas = svg(uri, file, inputStream, JSplitPane.BOTTOM, block)
+
+inline fun <reified T : Component> JSplitPane.custom(position: String = JSplitPane.LEFT, vararg params: Any, block: T.() -> Unit): T {
     val comp = T::class.java.getDeclaredConstructor(*params.map { it::class.java }.toTypedArray()).apply { isAccessible = true }.newInstance(*params).apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = comp
         JSplitPane.RIGHT -> rightComponent = comp
         JSplitPane.TOP -> topComponent = comp
@@ -615,14 +696,14 @@ inline fun<reified T: Component> JSplitPane.custom(position: String = JSplitPane
     return comp
 }
 
-inline fun<reified T: Component> JSplitPane.leftCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.LEFT, *params) { block(this) }
-inline fun<reified T: Component> JSplitPane.rightCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.RIGHT, *params) { block(this) }
-inline fun<reified T: Component> JSplitPane.topCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.TOP, *params) { block(this) }
-inline fun<reified T: Component> JSplitPane.bottomCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.BOTTOM, *params) { block(this) }
+inline fun <reified T : Component> JSplitPane.leftCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.LEFT, *params) { block(this) }
+inline fun <reified T : Component> JSplitPane.rightCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.RIGHT, *params) { block(this) }
+inline fun <reified T : Component> JSplitPane.topCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.TOP, *params) { block(this) }
+inline fun <reified T : Component> JSplitPane.bottomCustom(vararg params: Any, block: T.() -> Unit): T = custom(JSplitPane.BOTTOM, *params) { block(this) }
 
-fun<T: Component> JSplitPane.comp(position: String = JSplitPane.LEFT, comp: T, block: T.() -> Unit): T {
+fun <T : Component> JSplitPane.comp(position: String = JSplitPane.LEFT, comp: T, block: T.() -> Unit): T {
     comp.apply(block)
-    when(position) {
+    when (position) {
         JSplitPane.LEFT -> leftComponent = comp
         JSplitPane.RIGHT -> rightComponent = comp
         JSplitPane.TOP -> topComponent = comp
@@ -631,7 +712,7 @@ fun<T: Component> JSplitPane.comp(position: String = JSplitPane.LEFT, comp: T, b
     return comp
 }
 
-fun <T: Component> JSplitPane.leftComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.LEFT, comp, block)
-fun <T: Component> JSplitPane.rightComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.RIGHT, comp, block)
-fun <T: Component> JSplitPane.topComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.TOP, comp, block)
-fun <T: Component> JSplitPane.bottomComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.BOTTOM, comp, block)
+fun <T : Component> JSplitPane.leftComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.LEFT, comp, block)
+fun <T : Component> JSplitPane.rightComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.RIGHT, comp, block)
+fun <T : Component> JSplitPane.topComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.TOP, comp, block)
+fun <T : Component> JSplitPane.bottomComp(comp: T, block: T.() -> Unit): T = comp(JSplitPane.BOTTOM, comp, block)
