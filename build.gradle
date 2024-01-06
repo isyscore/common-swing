@@ -43,12 +43,12 @@ compileTestKotlin {
 }
 
 task sourcesJar(type: Jar) {
-//    classifier = "sources"
+    archiveClassifier = "sources"
     from sourceSets.main.allJava
 }
 
 task javadocJar(type: Jar) {
-//    classifier = "javadoc"
+    archiveClassifier = "javadoc"
     from javadoc.destinationDir
 }
 
@@ -98,16 +98,16 @@ publishing {
             name = "Release"
             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username = "$nexus_username"
-                password = "$nexus_password"
+                username = "$nexusUsername"
+                password = "$nexusPassword"
             }
         }
         maven {
             name = "Snapshot"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
             credentials {
-                username = "$nexus_username"
-                password = "$nexus_password"
+                username = "$nexusUsername"
+                password = "$nexusPassword"
             }
         }
     }
