@@ -42,12 +42,13 @@ class Browser : JPanel(BorderLayout()) {
         }
     }
 
-    class JavascriptResponseWaiter: CefMessageRouterHandlerAdapter() {
+    class JavascriptResponseWaiter : CefMessageRouterHandlerAdapter() {
         companion object {
             private const val CALL_TEMPLATE = "var returnValue = %1\$s ; cefCallback(\"JavaScriptResponseWaiter,%2\$s,\" + returnValue);"
             private val CURRENT_HANDLE = AtomicInteger()
 
         }
+
         private val handles = mutableMapOf<String, JavaScriptResponseHandle>()
 
         fun executeAndWaitForCallback(browser: CefBrowser, jsCall: String, maximumMsWait: Long): Pair<String?, Boolean> {
@@ -102,7 +103,7 @@ class Browser : JPanel(BorderLayout()) {
         var url = "about:blank"
         var args: Array<String>? = null
         var isTransparent = false
-        internal val _handler =  mutableMapOf<CefMessageRouterHandler, Boolean>()
+        internal val _handler = mutableMapOf<CefMessageRouterHandler, Boolean>()
 
         val settings: CefSettings get() = builder.cefSettings
 

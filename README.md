@@ -5,18 +5,18 @@
 ### 使用
 
 ```groovy
-kotlin_version=1.8.20
-java_version=17
+kotlin_version=1.9.24
+java_version=8
 
 dependencies {
-    implementation 'com.github.isyscore:common-swing:2.0.1.0'
+    implementation 'com.github.isyscore:common-swing:2.2.4.2'
 }
 ```
 
 ### 传递依赖
 
 ```groovy
-api 'com.github.isyscore:common-jvm:2.0.1'
+api 'com.github.isyscore:common-jvm:2.2.4.2'
 ```
 
 详细信息和用法参考本篇，此处不再赘述 [点击进入](https://isyscore.yuque.com/um3ee7/dhbg9u/avg941kdg0gkdkep?singleDoc)
