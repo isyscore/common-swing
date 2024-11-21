@@ -21,7 +21,7 @@ open class KDefaultCellRender(val block: JLabel.(value: Any?, index: Int, select
 
 open class KCellRender<C : JComponent, T>(private val cls: Class<C>, val block: C.(value: T?, index: Int, selected: Boolean, cellHasFocus: Boolean) -> Unit) : ListCellRenderer<T> {
     override fun getListCellRendererComponent(list: JList<out T>, value: T?, index: Int, selected: Boolean, cellHasFocus: Boolean): Component =
-        cls.newInstance().apply {
+        cls.getDeclaredConstructor().newInstance().apply {
             block(this, value, index, selected, cellHasFocus)
         }
 }
@@ -72,7 +72,7 @@ open class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.
 
     override fun getTableCellRendererComponent(table: JTable, value: Any?, selected: Boolean, cellHasFocus: Boolean, row: Int, col: Int): Component {
         this.table = table
-        return cls.newInstance().apply {
+        return cls.getDeclaredConstructor().newInstance().apply {
             block(this, this@KTableCellRE, value, selected, cellHasFocus, row, col)
         }
     }
@@ -81,7 +81,7 @@ open class KTableCellRE<T : JComponent>(private val cls: Class<T>, val block: T.
         this.table = table
         println("getTableCellEditorComponent => $value")
         tmpValue = value
-        return cls.newInstance().apply {
+        return cls.getDeclaredConstructor().newInstance().apply {
             block(this, this@KTableCellRE, value, selected, true, row, col)
         }
     }
@@ -114,7 +114,7 @@ open class KDefaultTreeCellRender(val block: JLabel.(value: Any?, selected: Bool
 
 open class KTreeCellRender<T : JComponent>(private val cls: Class<T>, val block: T.(value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean) -> Unit) : TreeCellRenderer {
     override fun getTreeCellRendererComponent(tree: JTree, value: Any?, selected: Boolean, expanded: Boolean, isLeaf: Boolean, row: Int, focused: Boolean): Component =
-        cls.newInstance().apply {
+        cls.getDeclaredConstructor().newInstance().apply {
             block(this, value, selected, expanded, isLeaf, row, focused)
         }
 }

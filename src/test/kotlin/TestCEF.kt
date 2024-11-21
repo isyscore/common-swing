@@ -3,6 +3,7 @@ import com.isyscore.kotlin.swing.UIStyle
 import com.isyscore.kotlin.swing.dsl.*
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
+import org.burningwave.core.assembler.StaticComponentContainer.Modules
 import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
@@ -21,6 +22,9 @@ class TestCEF {
 
     @Test
     fun test() {
+
+        Modules.exportPackageToAllUnnamed("java.desktop", "sun.awt")
+
         val frame = JFrame("CEF").apply {
             defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         }
