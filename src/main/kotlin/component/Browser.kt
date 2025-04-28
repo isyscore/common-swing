@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.isyscore.kotlin.swing.component
 
 import me.friwi.jcefmaven.CefAppBuilder

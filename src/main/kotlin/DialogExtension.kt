@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "UnusedReceiverParameter", "RemoveRedundantQualifierName")
 
 package com.isyscore.kotlin.swing
 

@@ -15,32 +15,30 @@ apply plugin: "maven-publish"
 apply plugin: 'signing'
 
 group 'com.github.isyscore'
-version '2.3.0.2'
+version '3.0.0.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    api "com.github.isyscore:common-jvm:2.2.4.2"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    api "com.github.isyscore:common-jvm:3.0.0.0"
     api 'me.friwi:jcefmaven:127.3.1'
     api 'com.formdev:flatlaf:3.0'
     api 'com.jtattoo:JTattoo:1.6.13'
     api 'org.apache.xmlgraphics:batik-swing:1.17'
-    testImplementation 'org.burningwave:core:12.64.3'
-    testImplementation 'com.fifesoft:rsyntaxtextarea:3.3.2'
+    api 'com.fifesoft:rsyntaxtextarea:3.3.2'
     testImplementation "junit:junit:4.13.2"
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = 17
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 task sourcesJar(type: Jar) {
@@ -62,7 +60,7 @@ publishing {
         mavenKotlin(MavenPublication) {
             groupId = "com.github.isyscore"
             artifactId = "common-swing"
-            version = "2.3.0.2"
+            version = "3.0.0.0"
             from components.java
             artifact sourcesJar
             artifact javadocJar

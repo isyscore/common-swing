@@ -1,10 +1,10 @@
+@file:Suppress("unused")
 package com.isyscore.kotlin.swing.component
 
 import java.awt.Component
 import java.awt.Container
 import java.awt.Graphics
 import java.awt.Image
-import java.io.StringReader
 import java.net.URL
 import javax.swing.ImageIcon
 
@@ -55,12 +55,10 @@ open class StretchIcon : ImageIcon {
     @Suppress("NAME_SHADOWING", "VARIABLE_WITH_REDUNDANT_INITIALIZER")
     @Synchronized
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-        var x = x
-        var y = y
         val img = image ?: return
         val ins = (c as Container).insets
-        x = ins.left
-        y = ins.top
+        var x = ins.left
+        var y = ins.top
         var w = c.width - x - ins.right
         var h = c.height - y - ins.bottom
         if (proportionate) {

@@ -11,8 +11,6 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf
 import com.formdev.flatlaf.themes.FlatMacLightLaf
 import com.formdev.flatlaf.util.SystemInfo
 import com.isyscore.kotlin.common.isMac
-import com.isyscore.kotlin.common.isUnix
-import com.isyscore.kotlin.common.isWindows
 import com.jtattoo.plaf.acryl.AcrylLookAndFeel
 import com.jtattoo.plaf.aero.AeroLookAndFeel
 import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel

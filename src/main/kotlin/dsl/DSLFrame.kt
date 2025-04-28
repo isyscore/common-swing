@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.isyscore.kotlin.swing.dsl
 
 import com.isyscore.kotlin.swing.component.*

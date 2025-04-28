@@ -1,6 +1,5 @@
 package com.isyscore.kotlin.swing.component
 
-import com.isyscore.kotlin.common.isMac
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.awt.event.MouseEvent

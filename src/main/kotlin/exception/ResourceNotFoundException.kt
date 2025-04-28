@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.isyscore.kotlin.swing.exception
 
 class ResourceNotFoundException: Exception {
